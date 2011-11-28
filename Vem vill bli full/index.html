@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<style type="text/css">
+		html { overflow: hidden; }
+		body { background-color: #000; margin: 0; }
+		#divLogo { position: absolute; left: 212px; width: 574px; height: 90px; background-image: url('logo.png') }
+		#divQuestion { position: absolute; left: 74px; top: 89px; width: 864px; height: 156px; font-family: sans-serif; font-size: 48px; font-weight: bold; color: white }
+		#divAnswers div { position: absolute; width: 417px; height: 62px; font-family: sans-serif; font-size: 24px; font-weight: bold; color: white; line-height: 55px; padding-left: 20px }
+		#divAnswers div.button { background-image: url('button.png') }
+		#divAnswers div.button_hover { background-image: url('button_hover.png') }
+		#divParticipants img { position: absolute }
+		#divCountdowns img { position: absolute }
+		#divGameOver { position: absolute; background-color: #000; color: #fff; border: 15px solid white; left: 225px; top: 100px; width: 500px; z-index: 100; font-family: sans-serif; text-align: center; padding: 15px; }
+		#divGameOver .divLoser { display: inline-block }
+	</style>
+
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript" src="questions.js"></script>
+	<script type="text/javascript">
+		var participant1, participant2, participant3;
+		function onload()
+		{
+			var participants = partyMachine.getParticipants();
+			shuffle(participants);
+
+			participant1 = participants[0];
+			participant2 = participants[1];
+			participant3 = participants[2];
+
+			document.getElementById('imgParticipant1').src = participant1.ImageUrl;
+			document.getElementById('imgParticipant2').src = participant2.ImageUrl;
+			document.getElementById('imgParticipant3').src = participant3.ImageUrl;
+
+			partyMachine.gameControllersAssigned = function()
+			{
+				participant1.gameController.gamepadPressed = function(left, up, right, down)
+				{
+					participant_gamepadPressed(participant1, left, up, right, down);
+				};
+				participant2.gameController.gamepadPressed = function(left, up, right, down)
+				{
+					participant_gamepadPressed(participant2, left, up, right, down);
+				};
+				participant3.gameController.gamepadPressed = function(left, up, right, down)
+				{
+					participant_gamepadPressed(participant3, left, up, right, down);
+				};
+
+				participant1.gameController.buttonsPressed = function(a, b, c, d)
+				{
+					participant_buttonsPressed(participant1, a, b, c, d);
+				};
+				participant2.gameController.buttonsPressed = function(a, b, c, d)
+				{
+					participant_buttonsPressed(participant2, a, b, c, d);
+				};
+				participant3.gameController.buttonsPressed = function(a, b, c, d)
+				{
+					participant_buttonsPressed(participant3, a, b, c, d);
+				};
+
+				ready();
+			};
+			partyMachine.assignGameControllers(participant1, participant2, participant3);
+		}
+
+		var countdown = 5;
+		function ready()
+		{
+			document.getElementById('divQuestion').innerText = countdown;
+
+			countdown--;
+
+			if (countdown <= 0)
+			{
+				playSound('buzz.mp3');
+				setTimeout('start()', 1000);
+			}
+			else
+			{
+				playSound('beep.mp3');
+				setTimeout('ready()', 1000);
+			}
+		}
+
+		var question, bgSound;
+		function start()
+		{
+			bgSound = playSound('bg.mp3', true);
+
+			shuffle(questions);
+
+			participant1.out = participant2.out = participant3.out = false;
+
+			question = questions[0];
+
+			document.getElementById('divQuestion').innerText = question.question;
+
+			for (var i = 0; i < question.answers.length; i++)
+			{
+				var div = document.getElementById('divAnswer' + i);
+				div.className = 'button';
+				div.innerText = question.answers[i];
+			}
+
+			gameOver = false;
+		}
+
+		var gameOver = true, answeringParticipant, selectedAnswerX, selectedAnswerY;
+		function participant_buttonsPressed(participant, a, b, c, d)
+		{
+			if (gameOver)
+				return;
+
+			if (answeringParticipant)
+			{
+				if (participant != answeringParticipant)
+					return;
+
+				if (selectedAnswerX == -1 || selectedAnswerY == -1)
+					return;
+
+				var selectedAnswerIndex = selectedAnswerX + (selectedAnswerY * 2);
+				if (selectedAnswerIndex == question.correct)
+					rightAnswer();
+				else
+					wrongAnswer();
+				return;
+			}
+
+			if (participant.out)
+				return;
+
+			selectedAnswerX = -1;
+			selectedAnswerY = -1;
+
+			answeringParticipant = participant;
+
+			answerCountdownSound = playSound('countdown.mp3');
+			bgSound.pause();
+
+			answerCountdownSeconds = 5;
+			answerCountdown();
+		}
+
+		function rightAnswer()
+		{
+			gameOver = true;
+
+			var losers = [];
+			if (participant1 != answeringParticipant)
+				losers.push(participant1);
+			if (participant2 != answeringParticipant)
+				losers.push(participant2);
+			if (participant3 != answeringParticipant)
+				losers.push(participant3);
+			document.getElementById('imgWinner').src = answeringParticipant.ImageUrl;
+			document.getElementById('h1Winner').innerText = answeringParticipant.Name;
+			document.getElementById('imgLoser1').src = losers[0].ImageUrl;
+			document.getElementById('h1Loser1').innerText = losers[0].Name;
+			document.getElementById('imgLoser2').src = losers[1].ImageUrl;
+			document.getElementById('h1Loser2').innerText = losers[1].Name;
+			document.getElementById('imgLoser3').style.display = 'none';
+
+			resetAnsweringParticipant();
+
+			document.getElementById('divGameOver').style.display = '';
+
+			playSound('win.mp3');
+			playSound('applause.mp3');
+
+			setTimeout('partyMachine.exit()', 10000);
+		}
+
+		function wrongAnswer()
+		{
+			answeringParticipant.out = true;
+
+			resetAnsweringParticipant();
+
+			var oldidx = selectedAnswerX + (selectedAnswerY * 2);
+			document.getElementById('divAnswer' + oldidx).className = 'button';
+
+			playSound('lose.mp3');
+
+			if (participant1.out && participant2.out && participant3.out)
+			{
+				gameOver = true;
+
+				document.getElementById('divWinner').style.display = 'none';
+				document.getElementById('imgLoser1').src = participant1.ImageUrl;
+				document.getElementById('h1Loser1').innerText = participant1.Name;
+				document.getElementById('imgLoser2').src = participant2.ImageUrl;
+				document.getElementById('h1Loser2').innerText = participant2.Name;
+				document.getElementById('imgLoser3').src = participant3.ImageUrl;
+				document.getElementById('h1Loser3').innerText = participant3.Name;
+
+				document.getElementById('divGameOver').style.display = '';
+
+				setTimeout('partyMachine.exit()', 10000);
+			}
+		}
+
+		function resetAnsweringParticipant()
+		{
+			clearTimeout(answerCountdownTimer);
+			answerCountdownSound.pause();
+			bgSound.play();
+
+			var idx;
+			if (answeringParticipant == participant1)
+				idx = 1;
+			else if (answeringParticipant == participant2)
+				idx = 2;
+			else if (answeringParticipant == participant3)
+				idx = 3;
+
+			answeringParticipant = null;
+
+			document.getElementById('imgCountdown' + idx).style.display = 'none';
+		}
+
+		var answerCountdownSeconds, answerCountdownTimer, answerCountdownSound;
+		function answerCountdown()
+		{
+			var idx;
+			if (answeringParticipant == participant1)
+				idx = 1;
+			else if (answeringParticipant == participant2)
+				idx = 2;
+			else if (answeringParticipant == participant3)
+				idx = 3;
+
+			var img = document.getElementById('imgCountdown' + idx);
+			img.src = 'timerPlayer' + idx + '_' + answerCountdownSeconds + '.png';
+			img.style.display = '';
+			if (answerCountdownSeconds-- > 0)
+				answerCountdownTimer = setTimeout('answerCountdown()', 1000);
+			else
+				wrongAnswer();
+		}
+
+		function participant_gamepadPressed(participant, left, up, right, down)
+		{
+			if (participant != answeringParticipant)
+				return;
+
+			if (selectedAnswerX == -1 || selectedAnswerY == -1)
+			{
+				if (left)
+				{
+					selectedAnswerX = 1;
+					selectedAnswerY = 0;
+				}
+				else if (right || down)
+				{
+					selectedAnswerX = 0;
+					selectedAnswerY = 0;
+				}
+				else if (up)
+				{
+					selectedAnswerX = 0;
+					selectedAnswerY = 1;
+				}
+			}
+			else
+			{
+				var oldidx = selectedAnswerX + (selectedAnswerY * 2);
+				if (left)
+					selectedAnswerX--;
+				else if (right)
+					selectedAnswerX++;
+				else if (up)
+					selectedAnswerY--;
+				else if (down)
+					selectedAnswerY++;
+
+				selectedAnswerX = Math.abs(selectedAnswerX) % 2;
+				selectedAnswerY = Math.abs(selectedAnswerY) % 2;
+
+				document.getElementById('divAnswer' + oldidx).className = 'button';
+			}
+
+			var selectedAnswerIndex = selectedAnswerX + (selectedAnswerY * 2);
+
+			var classname = 'divAnswer' + selectedAnswerIndex;
+			document.getElementById(classname).className = 'button_hover';
+		}
+
+		function shuffle(arr)
+		{
+			var i = arr.length;
+			if (i == 0)
+				return false;
+
+			while (--i)
+			{
+				var j = Math.floor(Math.random() * (i + 1));
+				var tempi = arr[i];
+				var tempj = arr[j];
+				arr[i] = tempj;
+				arr[j] = tempi;
+			}
+		}
+
+		function playSound(path, loop)
+		{
+			var audio = document.createElement('AUDIO');
+			audio.src = path;
+			if (loop)
+				audio.loop = 'loop';
+			audio.play();
+			return audio;
+		}
+
+		function debug(str)
+		{
+			document.getElementById('Debug').innerText += str + '\r\n';
+		}
+	</script>
+</head>
+<body onload="onload()">
+	<div style="margin-left: auto; margin-right: auto; width: 1024px; height: 768px; position: relative; background-image: url('bg.png')">
+		<div id="divGameOver" style="display: none">
+			<div id="divWinner" style="margin-bottom: 30px">
+				<h1 style="margin-top: 0; margin-bottom: 15px">WINNER!</h1>
+				<img id="imgWinner" width="128" height="128" alt="" /><h1 id="h1Winner" style="margin: 0"></h1>
+			</div>
+			<h1 style="margin-top: 0; margin-bottom: 15px">LOSERS!</h1>
+			<div class="divLoser"><img id="imgLoser1" width="128" height="128" alt="" /><h1 id="h1Loser1" style="margin: 0"></h1></div>
+			<div class="divLoser"><img id="imgLoser2" width="128" height="128" alt="" /><h1 id="h1Loser2" style="margin: 0"></h1></div>
+			<div class="divLoser"><img id="imgLoser3" width="128" height="128" alt="" /><h1 id="h1Loser3" style="margin: 0"></h1></div>
+			<h3 style="margin: 0">Have a glass of beer!</h3>
+		</div>
+		<div id="divLogo"></div>
+		<div id="divParticipants">
+			<img id="imgParticipant1" style="left: 476px; top: 414px; width: 92px; height: 92px" />
+			<img id="imgParticipant2" style="left: 612px; top: 413px; width: 100px; height: 100px" />
+			<img id="imgParticipant3" style="left: 771px; top: 413px; width: 128px; height: 128px" />
+		</div>
+		<img src="overlay.png" width="1024" height="768" alt="" border="" style="position: absolute" />
+		<div id="divQuestion"></div>
+		<div id="divAnswers">
+			<div id="divAnswer0" style="left: 64px; top: 250px"></div>
+			<div id="divAnswer1" style="left: 503px; top: 250px"></div>
+			<div id="divAnswer2" style="left: 64px; top: 308px"></div>
+			<div id="divAnswer3" style="left: 503px; top: 308px"></div>
+		</div>
+		<div id="divCountdowns">
+			<img id="imgCountdown1" style="left: 446px; top: 533px" />
+			<img id="imgCountdown2" style="left: 587px; top: 547px" />
+			<img id="imgCountdown3" style="left: 757px; top: 563px" />
+		</div>
+	</div>
+	<div id="Debug" style="color: White"></div>
+</body>
+</html>

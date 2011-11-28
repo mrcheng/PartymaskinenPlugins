@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<style type="text/css">
+		body { background-color: #000; }
+	</style>
+
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript" src="board.js"></script>
+	<script type="text/javascript" src="player.js"></script>
+	<script type="text/javascript">
+		var FPS = 5;
+
+		var gameOver = false;
+		var playerHit;
+
+		function translateToScreen(pos)
+		{
+			return { x: pos.x + 12, y: pos.y + 60 };
+		}
+
+		function translateBoardToPixels(pos)
+		{
+			return { x: pos.x * 16, y: pos.y * 16 };
+		}
+
+		function onload()
+		{
+			setTimeout('init()', 2000);
+		}
+
+		function init()
+		{
+			var beer = new Player();
+			board.players.push(beer);
+
+			beer.name = 'Beer';
+			beer.img = createPlayerImage('beer.png');
+			beer.img.style.zIndex = 100;
+			beer.boardPosition = { x: 13, y: 22 };
+			beer.onPlayerHit = beer_onPlayerHit;
+			beer.render();
+
+			var participants = partyMachine.getParticipants();
+			for (var i = 0; i < participants.length; i++)
+			{
+				var player = new Player();
+				board.players.push(player);
+
+				player.name = participants[i].Name;
+				player.img = createPlayerImage(participants[i].ImageUrl);
+
+				player.boardPosition = { x: 13, y: 13 };
+
+				player.render();
+			}
+
+			setTimeout('start()', 2000);
+		}
+
+		function createPlayerImage(src)
+		{
+			var img = document.createElement('IMG');
+			img.src = src;
+			img.style.position = 'absolute';
+			img.width = 26;
+			img.height = 26;
+			document.getElementById('divPlayers').appendChild(img);
+			return img;
+		}
+
+		function start()
+		{
+			document.getElementById('imgReady').style.display = 'none';
+			gameLoop();
+		}
+
+		function gameLoop()
+		{
+			for (var i = 0; i < board.players.length; i++)
+			{
+				board.players[i].move();
+
+				if (gameOver)
+					return;
+
+				board.players[i].render();
+			}
+
+			setTimeout('gameLoop()', 1000 / FPS);
+		}
+
+		function beer_onPlayerHit(player)
+		{
+			gameOver = true;
+			playerHit = player;
+
+			document.getElementById('spanPlayerHit').innerText = player.name;
+			document.getElementById('divGameOver').style.display = '';
+
+			setTimeout('partyMachine.exit()', 10000);
+		}
+
+		function debug(str)
+		{
+			document.getElementById('Debug').innerText += str + '\r\n';
+		}
+	</script>
+</head>
+<body onload="onload()">
+	<audio src="pacman.mp3" autobuffer="" autoplay="" loop="true"></audio>
+	<div style="margin-left: auto; margin-right: auto; width: 448px; position: relative;">
+		<img id="imgReady" src="ready.png" width="92" height="14" alt="" style="position: absolute; left: 178px; top: 320px; z-index: 200;" />
+		<div id="divGameOver" style="display: none; position: absolute; width: 438px; top: 208px; z-index: 1000; text-align: center; background-color: black; border: 5px solid yellow; color: white; font-family: sans-serif;">
+			<h1>GAME OVER</h1>
+			<h2>Beer boy caught <span id="spanPlayerHit" style="color: yellow;"></span>!</h2>
+			<h3>Have a glass of beer!</h3>
+		</div>
+		<div id="divPlayers"></div>
+		<img src="board.png" width="448" height="576" alt="" border="0" />
+	</div>
+	<div id="Debug" style="color: White"></div>
+</body>
+</html>

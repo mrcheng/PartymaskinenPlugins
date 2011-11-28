@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<style type="text/css">
+		html { overflow: hidden; }
+		body { background-color: #000; margin: 30px; color: #fff; font-family: sans-serif; }
+		#divParticipants { position: absolute; background-color: #000; border: 15px solid white; left: 85px; top: 185px; width: 600px; z-index: 100; }
+		#divLoser { position: absolute; background-color: #000; border: 15px solid white; left: 215px; top: 150px; width: 300px; z-index: 100; text-align: center; padding: 15px; }
+		.Paddle { background-color: #fff; position: absolute; width: 15px; height: 60px; }
+		#divRightPaddle { right: 0; }
+		#divBall { background-color: #fff; position: absolute; width: 15px; height: 15px; left: 392px; top: 285px; }
+	</style>
+
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript">
+		var FPS = 30;
+		var PADDLE_HEIGHT = 60;
+		var DECELERATION = 0.95;
+		var BOUNCE_LOSS = 0.5;
+		var PADDLE_POWER = 2;
+		var BALL_POWER = 15;
+		var MIN_BALL_POWER = 5;
+
+		var leftPaddle;
+		var rightPaddle;
+		var ball;
+
+		var canvas;
+		var ctx;
+
+		var leftPaddlePos;
+		var rightPaddlePos;
+		var ballPosX;
+		var ballPosY;
+
+		var leftPaddleSpeed = 0;
+		var rightPaddleSpeed = 0;
+		var ballSpeedX = 0;
+		var ballSpeedY = 0;
+
+		var leftJoystickPos = 0;
+		var rightJoystickPos = 0;
+
+		var leftParticipant;
+		var rightParticipant;
+
+		var gameStarted = false;
+		var gameOver = false;
+		var loserParticipant;
+
+//TODO: parseInt divisions
+		function onload()
+		{
+			var participants = partyMachine.getParticipants();
+			shuffle(participants);
+
+			leftParticipant = participants[0];
+			rightParticipant = participants[1];
+
+			document.getElementById('imgLeftParticipant').src = leftParticipant.ImageUrl;
+			document.getElementById('h1LeftParticipant').innerText = leftParticipant.Name;
+			document.getElementById('imgRightParticipant').src = rightParticipant.ImageUrl;
+			document.getElementById('h1RightParticipant').innerText = rightParticipant.Name;
+
+			leftPaddle = document.getElementById('divLeftPaddle');
+			rightPaddle = document.getElementById('divRightPaddle');
+			ball = document.getElementById('divBall');
+
+			canvas = document.getElementById('canvas');
+			ctx = canvas.getContext('2d');
+
+			renderBoard();
+
+			init();
+
+			partyMachine.gameControllersAssigned = function()
+			{
+				document.getElementById('divParticipants').style.display = '';
+
+				leftParticipant.gameController.joystick = function(x, y)
+				{
+					leftJoystickPos = y;
+				};
+				rightParticipant.gameController.joystick = function(x, y)
+				{
+					rightJoystickPos = y;
+				};
+
+				gameLoop();
+
+				setTimeout('ready()', 2000);
+			};
+			partyMachine.assignGameControllers(leftParticipant, rightParticipant);
+		}
+
+		function renderBoard()
+		{
+			ctx.fillStyle = 'rgb(255, 255, 255)';
+			ctx.fillRect(0, 0, canvas.width, 15);
+			for (var i = 15; i < canvas.height; i += 30)
+				ctx.fillRect(parseInt(canvas.width / 2 - 7.5), i, 15, 15);
+			ctx.fillRect(0, canvas.height - 15, canvas.width, 15);
+		}
+
+		function init()
+		{
+			leftPaddlePos = (canvas.height - PADDLE_HEIGHT) / 2;
+			rightPaddlePos = (canvas.height - PADDLE_HEIGHT) / 2;
+			if (Math.random() > 0.5)
+			{
+				ballPosX = ((canvas.width - 15) / 2) + 15;
+				ballSpeedX = BALL_POWER;
+			}
+			else
+			{
+				ballPosX = ((canvas.width - 15) / 2) - 15;
+				ballSpeedX = -BALL_POWER;
+			}
+
+			ballPosY = (canvas.height - 15) / 2;
+
+			renderPaddles();
+			renderBall();
+		}
+
+		function renderPaddles()
+		{
+			leftPaddle.style.top = leftPaddlePos + 'px';
+			rightPaddle.style.top = rightPaddlePos + 'px';
+		}
+
+		function renderBall()
+		{
+			ball.style.left = ballPosX + 'px';
+			ball.style.top = ballPosY + 'px';
+		}
+
+		var countdown = 5;
+		function ready()
+		{
+			document.getElementById('h1Countdown').innerText = countdown;
+
+			countdown--;
+
+			if (countdown <= 0)
+			{
+				playSound('buzz.mp3');
+				setTimeout('start()', 1000);
+			}
+			else
+			{
+				playSound('beep.mp3');
+				setTimeout('ready()', 1000);
+			}
+		}
+
+		function start()
+		{
+			document.getElementById('divParticipants').style.display = 'none';
+
+			playSound('bg.mp3');
+
+			gameStarted = true;
+		}
+
+		function renderLoser()
+		{
+			document.getElementById('divLoser').style.display = '';
+			document.getElementById('imgLoser').src = loserParticipant.ImageUrl;
+			document.getElementById('h1Loser').innerText = loserParticipant.Name;
+		}
+
+		function gameLoop()
+		{
+			handleInput();
+
+			movePaddles();
+			renderPaddles();
+
+			if (gameStarted)
+			{
+				moveBall();
+				renderBall();
+
+				if (gameOver)
+				{
+					renderLoser();
+					setTimeout('partyMachine.exit()', 10000);
+					return;
+				}
+			}
+
+			setTimeout('gameLoop()', 1000 / FPS);
+		}
+
+		function movePaddles()
+		{
+			leftPaddlePos += leftPaddleSpeed;
+			rightPaddlePos += rightPaddleSpeed;
+
+			if (leftPaddlePos < 15)
+			{
+				leftPaddlePos = 15;
+				if (leftPaddleSpeed < 0)
+					leftPaddleSpeed *= -1 * BOUNCE_LOSS;
+			}
+			else if (leftPaddlePos > canvas.height - PADDLE_HEIGHT - 15)
+			{
+				leftPaddlePos = canvas.height - PADDLE_HEIGHT - 15;
+				if (leftPaddleSpeed > 0)
+					leftPaddleSpeed *= -1 * BOUNCE_LOSS;
+			}
+
+			if (rightPaddlePos < 15)
+			{
+				rightPaddlePos = 15;
+				if (rightPaddleSpeed < 0)
+					rightPaddleSpeed *= -1 * BOUNCE_LOSS;
+			}
+			else if (rightPaddlePos > canvas.height - PADDLE_HEIGHT - 15)
+			{
+				rightPaddlePos = canvas.height - PADDLE_HEIGHT - 15;
+				if (rightPaddleSpeed > 0)
+					rightPaddleSpeed *= -1 * BOUNCE_LOSS;
+			}
+
+			leftPaddleSpeed *= DECELERATION;
+			rightPaddleSpeed *= DECELERATION;
+		}
+
+		function moveBall()
+		{
+			ballPosX += ballSpeedX;
+			ballPosY += ballSpeedY;
+
+			if (ballPosX < 15)
+			{
+				if (ballPosY > leftPaddlePos - 15 && ballPosY < leftPaddlePos + PADDLE_HEIGHT)
+				{
+					playSound('left.mp3');
+					ballPosX = 15;
+					ballSpeedX = (Math.random() * (BALL_POWER - MIN_BALL_POWER)) + MIN_BALL_POWER;
+					ballSpeedY = (Math.random() * (BALL_POWER - MIN_BALL_POWER)) + MIN_BALL_POWER;
+				}
+				else
+				{
+					playSound('gameoverleft.mp3');
+					gameOver = true;
+					loserParticipant = leftParticipant;
+				}
+			}
+			else if (ballPosX > canvas.width - 30)
+			{
+				if (ballPosY > rightPaddlePos - 15 && ballPosY < rightPaddlePos + PADDLE_HEIGHT)
+				{
+					playSound('right.mp3');
+					ballPosX = canvas.width - 30;
+					ballSpeedX = -((Math.random() * (BALL_POWER - MIN_BALL_POWER)) + MIN_BALL_POWER);
+					ballSpeedY = -((Math.random() * (BALL_POWER - MIN_BALL_POWER)) + MIN_BALL_POWER);
+				}
+				else
+				{
+					playSound('gameoverright.mp3');
+					gameOver = true;
+					loserParticipant = rightParticipant;
+				}
+			}
+
+			if (ballPosY < 15)
+			{
+				ballPosY = 15;
+				ballSpeedY *= -1;
+			}
+			else if (ballPosY > canvas.height - 30)
+			{
+				ballPosY = canvas.height - 30;
+				ballSpeedY *= -1;
+			}
+		}
+
+		function handleInput()
+		{
+			leftPaddleSpeed += PADDLE_POWER * leftJoystickPos;
+			rightPaddleSpeed += PADDLE_POWER * rightJoystickPos;
+		}
+
+		function shuffle(arr)
+		{
+			var i = arr.length;
+			if (i == 0)
+				return false;
+
+			while (--i)
+			{
+				var j = Math.floor(Math.random() * (i + 1));
+				var tempi = arr[i];
+				var tempj = arr[j];
+				arr[i] = tempj;
+				arr[j] = tempi;
+			}
+		}
+
+		function playSound(path)
+		{
+			var audio = document.createElement('AUDIO');
+			audio.src = path;
+			audio.play();
+		}
+
+		function debug(str)
+		{
+			document.getElementById('Debug').innerText = str + '\r\n' + document.getElementById('Debug').innerText;
+		}
+	</script>
+</head>
+<body onload="onload()">
+	<div style="width: 800px; margin-left: auto; margin-right: auto; position: relative;">
+		<div id="divParticipants" style="display: none">
+			<table width="100%" cellpadding="15">
+				<tr>
+					<td><img id="imgLeftParticipant" width="128" height="128" alt="" /><h1 id="h1LeftParticipant" style="margin: 0"></h1></td>
+					<td><h1 id="h1Countdown">VS</h1></td>
+					<td align="right"><img id="imgRightParticipant" width="128" height="128" alt="" /><h1 id="h1RightParticipant" style="margin: 0"></h1></td>
+				</tr>
+			</table>
+		</div>
+		<div id="divLoser" style="display: none;">
+			<h1 style="margin-top: 0; margin-bottom: 15px;">LOSER!</h1>
+			<img id="imgLoser" width="128" height="128" alt="" /><h1 id="h1Loser" style="margin: 0"></h1>
+			<h3 style="margin: 0">Have a glass of beer!</h3>
+		</div>
+		<div id="divLeftPaddle" class="Paddle"></div> 
+		<div id="divRightPaddle" class="Paddle"></div>
+		<div id="divBall"></div>
+		<canvas id="canvas" width="800" height="600"></canvas>
+	</div>
+	<div id="Debug" style="color: white"></div>
+</body>
+</html>
