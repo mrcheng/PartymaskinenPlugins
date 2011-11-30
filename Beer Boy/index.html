@@ -7,7 +7,12 @@
 		body { background-color: #000; }
 	</style>
 
-	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script src="http://mrcheng.github.com/Partymaskinen/deps/json2.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+	<script src="http://mrcheng.github.com/Partymaskinen/deps/jquery.ba-postmessage.js" type="text/javascript"></script>
+	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.messaging.js" type="text/javascript"></script>
+	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.js" type="text/javascript"></script>
+	
 	<script type="text/javascript" src="board.js"></script>
 	<script type="text/javascript" src="player.js"></script>
 	<script type="text/javascript">
@@ -15,7 +20,8 @@
 
 		var gameOver = false;
 		var playerHit;
-
+		var participants = [];
+		
 		function translateToScreen(pos)
 		{
 			return { x: pos.x + 12, y: pos.y + 60 };
@@ -28,7 +34,18 @@
 
 		function onload()
 		{
-			setTimeout('init()', 2000);
+			$.receiveMessage(function (e) {
+			
+				var data = JSON.parse(e.data);
+
+				if (data.event === 'startPlugin') {
+					participants = data.participants;
+				}
+				
+				setTimeout('init()', 2000);
+			
+			});
+				
 		}
 
 		function init()
@@ -43,14 +60,13 @@
 			beer.onPlayerHit = beer_onPlayerHit;
 			beer.render();
 
-			var participants = partyMachine.getParticipants();
 			for (var i = 0; i < participants.length; i++)
 			{
 				var player = new Player();
 				board.players.push(player);
 
-				player.name = participants[i].Name;
-				player.img = createPlayerImage(participants[i].ImageUrl);
+				player.name = participants[i].name;
+				player.img = createPlayerImage(participants[i].imageUrl);
 
 				player.boardPosition = { x: 13, y: 13 };
 
