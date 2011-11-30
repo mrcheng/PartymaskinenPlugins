@@ -1,0 +1,114 @@
+﻿@charset "UTF-8";
+
+.card {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 5px 4px;
+	visibility: hidden;
+}
+
+.card.show {
+	visibility: visible;
+}
+
+.card img {
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: 0.1s;
+}
+
+.cardinstr
+{
+	clear: left;
+	float: left;
+	padding-right: 5px;
+	position: relative;
+}
+		
+.cardinstr2
+{
+	display: inline-block;
+	padding-right: 10px;
+}
+		
+li
+{
+	list-style-type: none;
+}
+		
+.instructiontext
+{
+}
+		
+.dealcard
+{
+	background-color: rgba(0,0,0,0.6);
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+		
+.cardinstruction_cnt
+{
+	display: none;
+	background-color: rgba(0,0,0,0.6);
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	margin: 0 0 5px 0;
+}
+		
+.participant_cnt
+{
+	background-color: rgba(0,0,0,0.6);
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	margin: 0 0 5px 0;
+}
+		
+.game_cnt
+{
+	display: none;
+	background-color: rgba(0,0,0,0);
+}
+		
+.smoothfont
+{
+	font-family: ChicaMonoRegular, Verdana, Arial, Helvetica, sans-serif;
+}
+		
+.smallpartimg
+{
+	width: 75px;
+	height: 107px;
+}
+		
+.smallcardimg
+{
+	width: 75px;
+	height: 107px;
+}
+		
+.smallcardimgmany
+{
+	width: 65px;
+	height: 107px;
+}
+		
+.bigcard
+{
+	width: 300px;
+	height: 428px;
+}
+		
+body
+{
+	background-attachment: fixed;
+	background-color: #FFFFFF;
+	background-position: 0 0;
+	background-image: url('Content_img_1600x1200.jpg');
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+		
+h2, h5, h6
+{
+	color: rgba(255, 255, 255, 1);
+}

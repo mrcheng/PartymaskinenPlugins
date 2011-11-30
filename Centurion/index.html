@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Centurion</title>
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript" src="mersenne-twister.js"></script>
+	<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="centurion.js"></script>
+	
+	<style type="text/css"> 
+		<!--
+		html{overflow:hidden;}
+		
+		body
+		{
+			background-color: black; font: 11pt tahoma; text-align: center;
+			background-attachment: fixed;
+			background-color: #FFFFFF;
+			background-position: 0 0;
+			background-image: url('centurion.jpg');
+			background-repeat: no-repeat;
+			background-size: 100%;
+		}
+		
+		p {color:white;}
+		#instructions{padding:10%;margin-top:-110px;}
+		#instructions p{font-size:30px;}
+		#history{padding:10%;margin-top:-220px;}
+		#history p{font-size:20px;}
+		h1, h2, h3, h4 { margin: 5px; }
+		h1 {font: bold 64pt times;color: black;letter-spacing: -7px;}
+		.box {border-radius:20px;filter: alpha(opacity=80); -moz-opacity: .80; opacity: .80;background: #dddddd;margin: 20px;margin-left: auto;margin-top:-100px;margin-right: auto;padding: 10px;padding-top: 5px;border: 1px inset black;width: 300px;}
+		.counter2 {background: white;margin: 10px;margin-left: auto;margin-right: auto;width: 250px;	text-align: center;font: 70pt tahoma;font-weight: bold;
+color: black;border: 1px inset black;}
+		.normalcounter {background: white;color: black;margin: 10px;margin-left: auto;margin-right: auto;width: 250px;	text-align: center;font: 50pt tahoma;font-weight: bold;border: 1px inset black;}
+		.redcounter {background: white;color: red;margin: 10px;margin-left: auto;margin-right: auto;width: 250px;	text-align: center;font: 50pt tahoma;font-weight: bold;border: 1px inset black;}
+		input.sub {font: 14pt tahoma;width: 100px;}
+		.ad {filter: alpha(opacity=80); -moz-opacity: .80; opacity: .80;margin: 50px 120px;}
+		select { width: 130px;color: black; font: 11pt tahoma;	 }
+		a:link, a:visited, a:active { color: red; }
+		--> 
+	</style>
+
+</head> 
+<body>
+<div id="instructions">
+	<p>
+	DRINK ONE SHOT OF BEER EVERY MINUTE!
+	</p>
+</div>
+
+<div class="box"> 
+	<h2>Shots left</h2> 
+	<div class="counter2" id="shotsleft"> 
+	0
+	</div> 
+	<h3>Secs until next shot</h3> 
+	<div class="normalcounter" id="secs"> 
+	0
+	</div> 
+</div> 
+ 
+<div class="box" style="visibility:hidden;"> 
+<h2>Statistics</h2> 
+<table> 
+<tr><td style="width: 150px;">Started at</td><td><span id="startTime"></span></td></tr> 
+<tr><td>Done at</td><td><span id="stopTime"></span></td></tr> 
+<tr><td>Shots done</td><td><span id="shotsdone"></span></td></tr> 
+<tr><td>Liters done</td><td><span id="litersdone"></span></td></tr> 
+<tr><td><b>Mission progress</b></td><td><b><span id="prodone"></span></b></td></tr> 
+</table> 
+</div>
+
+<form name="settings"> 
+
+<select id="totalShots" name="totalShots" style="visibility:hidden;"> 
+	<option value="16" selected>5 (pussy)</option> 
+	<option value="10">10</option> 
+	<option value="15">15</option> 
+	<option value="20">20</option> 
+	<option value="25">25</option> 
+	<option value="50">50</option> 
+	<option value="75">75</option> 
+	<option value="100" >100 (centurion)</option> 
+</select> 
+
+<select id="shotDelay" name="shotDelay" style="visibility:hidden;"> 
+	<option value="60" selected>1 min (centurion)</option> 
+	<option value="120">2 min</option> 
+	<option value="180">3 min</option> 
+	<option value="240">4 min</option> 
+	<option value="300">5 min (swedish)</option> 
+</select> 
+
+<select id="shotSize" name="shotSize" style="visibility:hidden;"> 
+	<option value="0.02">2 cl</option> 
+	<option value="0.03" selected>3 cl</option> 
+	<option value="0.04">4 cl</option> 
+</select>
+ 
+</form> 
+
+<div id="history">
+	<p>
+	Centurion, also known as Century Club, Century Challenge, One-Hunzy-Hunzy, Chicken of the North, Hundred's Club, Power Hour and Century Clock in North America, is a drinking game. Although there are variations in the rules, a basic premise remains; drink one hundred shots of beer or cider in as many minutes. Depending on the size of the shot glass used, either 2.5 or 3 litres of low volume drink such as cider or beer is required.
+	</p>
+</div>
+
+<script language="javascript">
+
+$(function () {
+ 	
+	//partyMachine.playSound('centurion.mp3');
+	
+	startTimer();
+	
+	var tmr = (parseInt($("#shotDelay").val()) * parseInt($("#totalShots").val())) * 1000 + 5000; 
+	
+	setTimeout('partyMachine.exit()', tmr);
+	
+});
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>BEER BONG</title>
+	
+	<style type="text/css"> 
+	
+	body
+	{
+		background-color: black; font: 11pt tahoma; text-align: center;
+		background-attachment: fixed;
+		background-color: #FFFFFF;
+		background-position: 0 0;
+		background-image: url('bingbong.png');
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+	
+	</style>
+	
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="mersenne-twister.js"></script>
+	
+	<script type="text/javascript">
+
+    function setupContenders(c1, c2) {
+    $("#contenders").append($("#contender_" + c1)).append(' <font size="+3" color="red" face="georgia">VS</font> ').append($("#contender_" + c2));				
+				setTimeout('partyMachine.exit()', 15000);
+			}
+
+		$(function () {
+
+			var contenders = partyMachine.getParticipants();
+
+			if (!contenders || contenders.length <= 0) {
+				partyMachine.exit();
+			}
+
+			var m = new MersenneTwister();
+			var firstContender = m.genrand_int31() % contenders.length;
+			var secondContender = m.genrand_int31() % contenders.length;
+
+			//alert("init " + firstContender  + ' vs ' + secondContender);
+
+			if (contenders.length > 1) {
+				while (firstContender === secondContender) {
+					secondContender = m.genrand_int31() % contenders.length;
+				}
+			}
+
+			//alert(contenders[firstContender].name + ' vs ' + contenders[secondContender].name);
+			//alert(firstContender  + ' vs ' + secondContender);
+
+			var contenderHtml = '';
+
+			for (var c = 0; c < contenders.length; c++) {
+
+				var contender = contenders[c];
+				contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.ImageUrl + '" width="128" height="128"/></span>';
+        }
+
+        $("#contenders").html(contenderHtml);
+
+        //playSound('mk.mp3');
+
+        var dudesChosen = new Array();
+        //debugger;
+        while (dudesChosen.length != contenders.length-2 ) {
+
+        var newlyChosen = m.genrand_int31() % contenders.length;
+
+        if (newlyChosen != firstContender
+        && newlyChosen != secondContender 
+				&& $.inArray(newlyChosen, dudesChosen) == -1) {
+					dudesChosen.push(newlyChosen);
+					$("#contender_" + newlyChosen).fadeTo(7000, 0.001, function () {
+						// Animation complete.
+					});					
+				}
+
+			}
+	
+			setTimeout('partyMachine.exit()', 21000);
+	
+		});
+
+
+    </script>
+	
+</head>
+<body>
+
+	<audio src="mk.mp3" autobuffer="" autoplay=""></audio>
+	<div id="tut" style="color: white;"><h1>WHO WILL BE THE LUCKY<br />DUAL BEER BONG DUELLISTS?</h1></div>
+	<div id="contenders" class="box">
+	</div>
+		
+</body>
+</html>

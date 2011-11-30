@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>You are my bitch</title>
+    <script type="text/javascript" src="PartyMachine.js"></script>
+    <script type="text/javascript" src="mersenne-twister.js"></script>
+    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+  
+    <script type="text/javascript">
+
+      function playSound(path)
+      {
+      var audio = document.createElement('AUDIO');
+      audio.autoplay = true;
+      audio.src = path;
+      audio.play();
+      }
+
+      function onload() {
+      var contenders = partyMachine.getParticipants();
+      var timeout = 300000;
+
+      if (!contenders || contenders.length <= 0) {
+                partyMachine.exit();
+            }
+
+            var m = new MersenneTwister();
+            var firstContender = m.genrand_int31() % contenders.length;
+            var secondContender = m.genrand_int31() % contenders.length;
+
+            if (contenders.length > 1) {
+                while (firstContender === secondContender) {
+                    secondContender = m.genrand_int31() % contenders.length;
+                }
+            }
+
+            var contenderHtml = '';
+            var textContenderHtml = '';
+
+            for (var c = 0; c < contenders.length; c++) {
+                var contender = contenders[c];
+                contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.ImageUrl + '"/></span>';
+            }
+
+            textContenderHtml = '<font face=\'verdana\' size=\'5\' color=\'#ffffff\'><b>' + contenders[firstContender].Name + ' owns ' + contenders[secondContender].Name + 's ass. ' + contenders[secondContender].Name + ' is a <font color=\'#faafba\'>BITCH</font> for ' + ((timeout/1000)/60) + ' minutes!</b></font>';
+
+              $("#contenders").html(contenderHtml);
+              $("#textContenders").html(textContenderHtml);
+
+              playSound('ymb.mp3');
+              //var audio = document.createElement('AUDIO');
+              //audio.autoplay = true;
+              //audio.src = 'ymb.mp3';
+              //audio.loop = true;
+              //audio.play();
+
+              var dudesChosen = new Array();
+              while (dudesChosen.length != contenders.length - 2) {
+              var newlyChosen = m.genrand_int31() % contenders.length;
+
+              if (newlyChosen != firstContender
+              && newlyChosen != secondContender
+				&& $.inArray(newlyChosen, dudesChosen) == -1) {
+                    dudesChosen.push(newlyChosen);
+                    $("#contender_" + newlyChosen).fadeOut(7000, function() {
+                        // Animation complete.
+                    });
+
+                    $("#textContenders").fadeIn(15000, function() {
+                        // Animation complete.
+                    });
+                }
+            }
+
+            setTimeout('partyMachine.exit()', 20000); 
+        }
+    </script>
+    <style>
+    	.box{position:absolute;margin: auto 0;text-align:center;width:100%;}
+    	.box b{font-family:Verdana, Geneva, Tahoma, sans-serif;font-size:40px;color:#fff;}
+    	.box i{font-family:Verdana, Geneva, Tahoma, sans-serif;font-size:40px;color:#faafba;font-style:normal;font-weight:bold;}
+    	#contenders{position:absolute;margin: auto 0;margin-top:100px;}
+    	#textContenders{position:absolute;margin: auto 0;}
+    	html{overflow:hidden;}
+    </style>
+</head>
+    <body bgcolor="#000000" onload="onload()">
+    	<div class="box">
+	    	<b>Mr Cheng - You are my </b><i>bitch</i>	        
+	        <div id="contenders"></div>
+	        <div id="textContenders" style="display: none;"></div>
+		</div>
+    </body>
+</html>

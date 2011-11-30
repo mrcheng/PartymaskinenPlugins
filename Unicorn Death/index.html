@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>Unicorn Death</title>
+	<style>
+		body{background-image:url('back.jpg');background-size: 100%;}
+		#playingArea{position: absolute;margin-left: auto;margin-right: auto;border: 15px solid black;width: 500px;height: 500px;background-color:fuchsia;border-radius:20px;margin-top:80px;}
+		#paddle{position: absolute;top: 470px;left: 228px;width: 64px;height: 16px;}
+		#ball{position: absolute;top: 4px;left: 200px;width: 10px;height: 10px;background-color:blue;border-radius:10px;border:3px solid olive;}
+		#score{margin-left: auto;margin-right: auto;padding: 0 10px 0 10px;font-size: 26px;color: white;background-color: rgb(32,128,64);z-index:10;text-align:center;text-transform:uppercase;}
+		h1, p{color: #FFF;text-align: center;}
+		#game{width: 510px;height: 510px;margin-left: auto;margin-right: auto;margin-top:0px;position:relative;z-index:5;opacity:0.8;}
+		#unicorn {margin-left: auto;margin-right: auto;position:fixed;z-index:10;}
+		#txtCountdown{color: #FFF;text-align: center;font-size:180px;margin-left: auto;margin-right: auto;margin-top:130px;}
+	</style>
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+	<script type="text/javascript">
+
+    var ball;
+    var paddle;
+    var score;
+
+    var dx = 8;
+    var dy = 8;
+    var currentScore = 0;
+    var timer;
+    var paddleLeft = 228;
+    var ballLeft = 200;
+    var ballTop = 4;
+    var FPS = 30;
+    var countdown = 5;
+
+    function playSound(path) {
+    	var audio = document.createElement('AUDIO');
+    	audio.autoplay = true;
+    	audio.src = path;
+    	audio.play();
+    }
+
+		function ready()
+		{
+			if (countdown == 0){
+			$("#txtCountdown").html("GO!");
+			}
+			else {
+			$("#txtCountdown").html(countdown);
+			}
+			countdown--;
+			if (countdown < 0)
+				setTimeout('init()', 1000);
+			else
+				setTimeout('ready()', 1000);
+		}
+
+	var leftPressed, rightPressed;
+
+	    function init() {
+	    	$('#txtCountdown').hide();
+	    	$('#unicorn').hide();
+	    	ball = $('#ball');
+	    	paddle = $('#paddle');
+	    	score = document.getElementById('score');
+		partyMachine.getCurrentParticipant().gameController.gamepadPressed = function(left, up, right, down) {
+			if (left)
+				leftPressed = true;
+			else if (right)
+				rightPressed = true;
+		};
+		partyMachine.getCurrentParticipant().gameController.gamepadReleased = function(left, up, right, down) {
+			if (left)
+				leftPressed = false;
+			else if (right)
+				rightPressed = false;
+		};
+
+   		start();
+	    }
+
+		function start() {
+			if (leftPressed && paddleLeft > 0) {
+				paddleLeft -= 4;
+				paddle.css('left', paddleLeft + 'px');
+			}
+			else if (rightPressed && paddleLeft < 436) {
+				paddleLeft += 4;
+				paddle.css('left', paddleLeft + 'px');
+			}
+
+			detectCollisions();
+			render();
+			difficulty();
+			if (ballTop < 470) {
+				timer = setTimeout('start()', 1000 / FPS);
+			}
+			else {
+				gameOver();
+			}
+		}
+
+		function detectCollisions() {
+			if (collisionX())
+				dx = dx * -1;
+			if (collisionY())
+				dy = dy * -1;
+		}
+
+		function collisionX() {
+			if (ballLeft < 4 || ballLeft > 480)
+				return true;
+			return false;
+		}
+
+		function collisionY() {
+			if (ballTop < 4)
+				return true;
+			if (ballTop > 450) {
+			playSound('hit.mp3');
+
+				if (ballLeft > paddleLeft && ballLeft < paddleLeft + 64)
+					return true;
+			}
+			return false;
+		}
+
+		function render() {
+			moveBall();
+			updateScore();
+		}
+
+		function moveBall() {
+			ballLeft += dx;
+			ballTop += dy;
+			ball.css('left', ballLeft);
+			ball.css('top', ballTop);
+		}
+
+		function updateScore() {
+			currentScore += 0.5;
+			 if (currentScore % 10 == 0)
+       score.innerText = 'Score: ' + currentScore;
+		}
+
+		function difficulty() {
+			if (currentScore % 100 == 0) {
+				if (dy > 0)
+					dy += 1;
+				else
+					dy -= 1;
+			}
+		}
+
+		function gameOver() {
+			clearTimeout(timer);
+			if (currentScore >= 400) {
+				score.innerText += "  EVERYONE ELSE CHUGS A BEER!";
+				$('#unicorn').show();
+			} else {
+				score.innerText += "  CHUG A GLASS OF BEER!";
+				$('#unicorn').show();
+			}
+			score.style.backgroundColor = 'rgb(128,0,0)';
+			setTimeout('partyMachine.exit()', 5000);
+		}
+	</script>
+</head>
+<body onload="ready()">
+	<audio src="skylander.mp3" autobuffer="" autoplay=""></audio>
+	<div id="unicorn">	
+		<img src="pegasus1.gif" width="520" height="444" alt="lizard" />
+	</div>
+		<div id="game">
+			<div id="playingArea">
+				<div id="score">The unicorn sais: -Get 400 points!</div>
+				<div id="txtCountdown">5</div>
+				<div id="paddle">
+					<img src="./paddle.png" />
+				</div>
+				<div id="ball">
+					<!--<img src="./ball.png" />-->
+				</div>
+			</div>
+		</div>
+</body>
+</html>

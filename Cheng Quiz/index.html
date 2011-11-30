@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>Cheng Quiz</title>
+	<style>
+
+		img{width:100%;position:absolute;top:0px;}
+		#q{background-color:red;color:white;text-align:center;font-size:80px;z-index:10;margin-left: auto;margin-right: auto;margin-top:120px;z-index:10;
+		position:relative;top:0px;border:solid 20px black;border-radius:10px;width:70%;padding:30px 20px 30px 20px;}
+		#down{color: #111;text-align: center;font-size:280px;margin-left: auto;margin-right: auto;margin-top:120px;z-index:10;position:relative;top:0px;}
+		#image{width:100%;z-index:5;opacity:0.3;position:absolute;top:0px;}
+		.box{position:absolute;z-index:100;}
+		.box img{width:128px;height:128px;float:left;}
+		html{overflow:hidden;margin-left:-8px;}
+
+	</style>
+	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="mersenne-twister.js"></script>
+	<script type="text/javascript">
+	
+//	$(function () {
+//
+//			var contenders = partyMachine.getParticipants();
+//			var m = new MersenneTwister();
+//			var firstContender = m.genrand_int31() % contenders.length;
+//			var secondContender = m.genrand_int31() % contenders.length;
+//			var contenderHtml = '';
+//			
+//			for (var c = 0; c < contenders.length; c++) {
+//				
+//				var contender = contenders[c];
+//				contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.ImageUrl + '"/></span>';
+//				
+//        }
+//
+//        $("#contenders").html(contenderHtml);
+//
+//		});
+
+		var img = new Array()
+
+		img[0] = '1.jpg'
+		img[1] = '2.jpg'
+		img[2] = '3.jpg'
+		img[3] = '4.jpg'
+		img[4] = '5.jpg'
+		img[5] = '6.jpg'
+		img[6] = '7.jpg'
+		img[7] = '8.jpg'
+		img[8] = '9.jpg'
+		img[9] = '10.jpg'
+		img[10] = '11.jpg'
+		img[11] = '12.jpg'
+		img[12] = '13.jpg'
+		img[13] = '14.jpg'
+		img[14] = '15.jpg'
+		img[15] = '16.jpg'
+		img[16] = '17.jpg'
+		img[17] = '18.jpg'
+		img[18] = '19.jpg'
+		img[19] = '20.jpg'
+		img[20] = '21.jpg'
+		img[21] = '22.jpg'
+		img[22] = '23.jpg'
+
+		var j = 0
+		var p = img.length;
+		var preBuffer = new Array()
+
+		for (i = 0; i < p; i++){
+   			preBuffer[i] = new Image()
+   			preBuffer[i].src = img[i]
+		}
+
+		var whichImage = Math.round(Math.random()*(p-1));
+
+		function showImage(){
+			$('#q').hide();
+			document.write('<img src="'+img[whichImage]+'">');
+		}
+
+		var q = new Array(
+
+		"Fr&#229;ga 1:<br />Hur m&#229;nga 33cl b&#228;rs konsumerades av 6 personer f&#246;rsta dagen p&#229; Orust workshoppen 2010", 
+		"Fr&#229;ga 2:<br />Vilken kroppsdel visades upp i webbkameran p&#229; Stellans workshop 2009", 
+		"Fr&#229;ga 3:<br />N&#228;r blev Stellan klar med <q>uploadern</q> till mrcheng.tv", 
+		"Fr&#229;ga 4:<br />Vem kr&#228;ktes i Leninbadet", 
+		"Fr&#229;ga 5:<br />Vem vann Dual Bong Challenge p&#229; Orust 2009", 
+		"Fr&#229;ga 6:<br />Hur m&#229;nga m&#229;nader var Darkdawn anst&#228;lld av Mr. Cheng Collective", 
+		"Fr&#229;ga 7:<br />I vilken kinesisk stad bor Darkdawn", 
+		"Fr&#229;ga 8:<br />Hur m&#229;nga personer r&#228;knas som Cheng Crew idag", 
+		"Fr&#229;ga 9:<br />Vilket &#229;r f&#246;ddes den briljanta id&#233;n om Mr. Cheng", 
+		"Fr&#229;ga 10:<br />Var hade vi den f&#246;rsta workshoppen ever"
+
+		);
+
+		var l = q.length;
+		var rnd = Math.floor(l*Math.random());
+		var countdown = 5;
+
+		function playSound(path) {
+    		var audio = document.createElement('AUDIO');
+    		audio.autoplay = true;
+    		audio.src = path;
+    		audio.play();
+    	}
+
+		function ready()
+		{
+			if (countdown == 0){
+				playSound('buzz.mp3');
+				$("#down").html("GO!");
+			}
+			else {
+				playSound('beep.mp3');
+				$("#down").html(countdown);
+			}
+
+			countdown--;
+
+			if (countdown < 0)
+				setTimeout('init()', 1000);
+			else
+				setTimeout('ready()', 1000);
+		}
+
+		function init() {
+			$('#down').hide();
+			playSound('wtf.mp3');
+			$('#q').show();
+			$("#q").html(q[rnd] + "?");
+		}
+
+			setTimeout('partyMachine.exit()', 19500);
+			
+
+	</script>
+</head>
+
+<body onload="ready()">
+<span>
+<!--	<div id="contenders" class="box">-->
+	
+	</span>
+	<div id="q"></div>
+	<div id="down"></div>
+	
+<script>showImage();</script>
+
+</body>
+
+</html>

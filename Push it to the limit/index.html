@@ -1,0 +1,33 @@
+<html>
+<title>Push it to the limit!!!</title>
+<script type="text/javascript" src="PartyMachine.js"></script>   
+<script type="text/javascript" src="swfobject.js"></script>
+  
+  <div id="ytapiplayer">
+    You need Flash player 8+ and JavaScript enabled to view this video.
+  </div>
+
+  <script type="text/javascript">
+
+    var params = { allowScriptAccess: "always" };
+    var atts = { id: "myytplayer" };
+    swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer", 
+                       "ytapiplayer", "100%", "98%", "8", null, null, params, atts);
+
+    function onYouTubePlayerReady(playerId) {
+      ytplayer = document.getElementById("myytplayer");
+	  <!-- paste in the last letters of the utube url here -->
+      ytplayer.loadVideoById("ljY5EE_KPoY", 0);
+      setInterval('', 1000);
+      ytplayer.addEventListener('onStateChange', 'onytplayerStateChange');
+      ytplayer.attachEvent("onStateChange", onytplayerStateChange);
+    }
+
+    function onytplayerStateChange(newState) {
+	 if (newState == 0) {
+         partyMachine.exit();
+        }
+
+    }
+ </script>
+ </html>

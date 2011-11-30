@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>The Duel</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style type="text/css" media="screen">
+		html, body { height:100%; background-color: #ffffff;}
+		body { margin:0; padding:0; overflow:hidden; }
+		#flashContent { width:100%; height:100%; }
+		</style>
+		<script type="text/javascript" src="PartyMachine.js"></script>
+		<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="swfobject.js"></script>
+		<script type="text/javascript">
+		
+			var _currentParticipant = null;
+			var _opponentParticipant = null;
+			var _swf = null;
+			
+			function getFlashMovie ()
+			{
+				if ( _swf == null )
+				{
+					_swf = thisMovie( "Duel" );
+				} 
+				return _swf;
+			}
+		
+			function getCurrentParticipant ()
+			{
+				if ( _currentParticipant == null )
+				{
+					_currentParticipant = partyMachine.getCurrentParticipant();
+				}	
+				return _currentParticipant;
+			}
+			
+			function getOpponentParticipant ()
+			{
+				if ( _opponentParticipant == null )
+				{
+					_opponentParticipant = getRandomParticipant();
+				}	
+				return _opponentParticipant;
+			}
+			
+			function getParticipants()
+			{
+				return partyMachine.getParticipants();
+			}
+			
+			function getRandomParticipant ()
+			{
+				var participants = getParticipants();
+				var index = randomNumber( 0, participants.length - 1 );
+				var participant = participants[ index ];
+				
+				if ( participant.Name == _currentParticipant.Name )
+				{
+					return getRandomParticipant();
+				}
+				
+				return participant;
+			}
+			
+			function randomNumber ( min, max )
+			{
+				return Math.round( Math.random() * ( max - min ) + min );
+			}
+			
+			function onCurrentParticipantClicked ()
+			{
+				getFlashMovie().onCurrentParticipantClicked();
+			}
+			
+			function onOpponentParticipantClicked ()
+			{
+				getFlashMovie().onOpponentParticipantClicked();
+			}
+			
+			function thisMovie ( movieName )
+			{
+         		if ( navigator.appName.indexOf( "Microsoft" ) != -1 ) {
+	            	return window[ movieName ];
+         		} else {
+             		return document[movieName];
+        		}
+     		}
+     		
+     		function start ()
+     		{
+     			getFlashMovie().start();
+     		}
+     		
+     		function gameOver ()
+     		{
+     			setTimeout( "partyMachine.exit()", 6000 );
+     		}	
+     		
+     		function init ()
+     		{
+				partyMachine.gameControllersAssigned = function()
+				{
+					getCurrentParticipant().gameController.buttonsReleased = function( buttonA, buttonB, buttonC, buttonD )
+					{
+						onCurrentParticipantClicked();
+					};
+					
+					getOpponentParticipant().gameController.buttonsReleased = function( buttonA, buttonB, buttonC, buttonD )
+					{
+						onOpponentParticipantClicked();
+					};
+					
+					setTimeout( "start()", 2000 );
+				};
+				
+				partyMachine.assignGameControllers( getCurrentParticipant(), getOpponentParticipant() );
+				
+				var flashvars = false;
+				var params = {
+				};
+				var attributes = {
+				  id: "Duel",
+				  name: "Duel",
+				  allowScriptAccess: "always"
+				};
+
+				swfobject.embedSWF("Duel.swf", "flashContent", "1024", "768", "10.0.0","expressInstall.swf", flashvars, params, attributes);
+     		}		
+			
+		</script>
+		
+		<style type="text/css">
+			body, html {
+				width: 100%;
+			}
+			
+			#flashContainer {
+				margin: 0 auto;
+				width: 1024px;
+			}
+		</style>
+	</head>
+	<body onload="init()">
+	
+		<div id="flashContainer">
+			<div id="flashContent"></div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>The Human Centipede</title>
+
+		<link rel="stylesheet" href="plugin.css" type="text/css" />
+		<script type="text/javascript" src="PartyMachine.js"></script>
+		<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="plugin.js"></script>
+	</head>
+
+	<body class="start">
+	<audio src="centipede_theme.mp3" loop autobuffer="" autoplay=""></audio>
+	<div class="gamearea">
+		<canvas id="maincanvas" width="640" height="480"></canvas>
+		<div id='players' style='display:none'>
+			<div id='player1'>
+				<img class="player" /><br />
+				<span></span>
+			</div>
+			<div id='player2'>
+				<img class="player" /><br />
+				<span></span>
+			</div>
+			<div id='player3'>
+				<img class="player" /><br />
+				<span></span>
+			</div>
+			<div id='player4'>
+				<img class="player" /><br />
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<div id="losers">You lose, and you get to chug a beer</div>
+	</body>
+</html>
