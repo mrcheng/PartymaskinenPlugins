@@ -18,21 +18,6 @@
       <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
       
       <script type="application/javascript">
-      
-      	function onload(){
-		$.receiveMessage(function (e) {
-	
-			var data = JSON.parse(e.data);
-	
-			if (data.event === 'startPlugin') {
-				participants = data.participants;
-			}
-	
-			setTimeout('init()', 2000);
-	
-		});
-
-	}
 
         var colors = ["#B8D430", "#3AB745", "#029990", "#3501CB",
         "#2E2C75", "#673A7E", "#CC0071", "#F80120",
