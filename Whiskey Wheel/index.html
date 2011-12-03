@@ -9,7 +9,7 @@
     html{overflow:hidden;}
   </style>
 </head>
-<body onLoad="setTimeout('spin()', 5000)">
+<body onLoad="load()">
    <div id="center">
     <div id="middle">
       <audio src="45.mp3" autobuffer="" autoplay=""></audio>
@@ -96,34 +96,36 @@
 					}
 				}
 
-				function spin() {
+
+				function load() {
 					$.receiveMessage(function (e) {
 			
-				var data = JSON.parse(e.data);
+						var data = JSON.parse(e.data);
 
-					if (data.event === 'startPlugin') {
-						chengs = data.participants;
+						if (data.event === 'startPlugin') {
+							chengs = data.participants;
 						
-						for (var p = 0; p < chengs.length; p++) {
-					contenders.push(chengs[p].name);
+							for (var p = 0; p < chengs.length; p++) {
+								contenders.push(chengs[p].name);
+							}
+							
+							draw();
+							
+							setTimeout('spin()', 5000);
+							
+						}
+					});
 				}
+				
+				function spin() {
 					
 					playSound('6.mp3');
 					spinAngleStart = Math.random() * 10 + 10;
 					spinTime = 0;
 					spinTimeTotal = Math.random() * 3 + 4 * 1000;
 					rotateWheel();
-					}
-					
-					
-					
-				
-				});
-					
-					
-					
 				}
-
+				
 				function rotateWheel() {
 					spinTime += 30;
 					if (spinTime >= spinTimeTotal) {
@@ -171,8 +173,6 @@
 					audio.play();
 				}
 
-
-				draw();
       </script>
     </div>
   </div>
