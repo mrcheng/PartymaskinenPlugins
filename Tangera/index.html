@@ -52,12 +52,10 @@
 				var data = JSON.parse(e.data);
 
 				if (data.event === 'startPlugin') {
-					participants = data.participants;
+					tangera.init(data.participants);
+					fadeInInstr();
+					setTimeout("fadeOutInstr()", 10000);
 				}
-
-				tangera.init();
-				fadeInInstr();
-				setTimeout("fadeOutInstr()", 10000);
 			});
 		});
  

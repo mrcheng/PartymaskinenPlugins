@@ -1,5 +1,6 @@
 (function (tangera, $, undefined) {
 
+	var contenders;
 	var suites = ['c', 'd', 'h', 's'];
 	var ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 't', 'j', 'q', 'k', 'a'];
 	var deck = [];
@@ -41,8 +42,6 @@
 	}
 
 	function getRandomParticipant() {
-		var contenders = partyMachine.getParticipants();
-
 		if (!contenders || contenders.length <= 0) {
 			return null;
 		}
@@ -73,7 +72,9 @@
 		playSound("#shuffle");
 	}
 
-	tangera.init = function () {
+	tangera.init = function (participants) {
+
+		contenders = participants;
 
 		for (var i = 0; i < ranks.length; ++i) {
 			for (var j = 0; j < suites.length; ++j) {
@@ -195,8 +196,6 @@
 			targetsToChugs[chosenOne.Name] += chugsToDistribute;
 
 		}
-
-		var contenders = partyMachine.getParticipants();
 
 		var groupedBySips = [];
 
