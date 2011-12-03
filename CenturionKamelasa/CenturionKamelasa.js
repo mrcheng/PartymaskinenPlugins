@@ -81,7 +81,6 @@ var CenturionKamelasa = function(ctx, width, height)
 			
 			if(_endGame == 1)
 			{
-				alert("stop");
 				partyMachine.exit();
 			}
 		}
@@ -122,7 +121,7 @@ var CenturionKamelasa = function(ctx, width, height)
 	 		return;
 	 	}
 	
-		_drawBackground(0, 200, _width, _height);	 	
+		_drawBackground(0, 200, _width, 319);	 	
 	 	_calcCenter(_counter);
 	 	
 		_ctx.fillStyle = '#FFFFFF';
