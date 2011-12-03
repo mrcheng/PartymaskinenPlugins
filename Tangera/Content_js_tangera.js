@@ -1,6 +1,5 @@
 (function (tangera, $, undefined) {
 
-	var contenders;
 	var suites = ['c', 'd', 'h', 's'];
 	var ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 't', 'j', 'q', 'k', 'a'];
 	var deck = [];
@@ -42,6 +41,8 @@
 	}
 
 	function getRandomParticipant() {
+		var contenders = partyMachine.getParticipants();
+
 		if (!contenders || contenders.length <= 0) {
 			return null;
 		}
@@ -72,9 +73,7 @@
 		playSound("#shuffle");
 	}
 
-	tangera.init = function (participants) {
-
-		contenders = participants;
+	tangera.init = function () {
 
 		for (var i = 0; i < ranks.length; ++i) {
 			for (var j = 0; j < suites.length; ++j) {
@@ -154,13 +153,13 @@
 		if (chosenText) {
 			for (c = 0; c < contenders.length; c++) {
 				chosenOne = contenders[c];
-				container.append("<img src='" + chosenOne.ImageUrl + "' class='smallpartimg'></img><h6 class='instructiontext cardinstr2'>" + chosenText + "</h6>");
+				container.append("<img src='" + chosenOne.imageUrl + "' class='smallpartimg'></img><h6 class='instructiontext cardinstr2'>" + chosenText + "</h6>");
 			}
 		}
 		else {
 			for (c = 0; c < contenders.length; c++) {
 				chosenOne = contenders[c];
-				container.append("<img src='" + chosenOne.ImageUrl + "' class='smallpartimg'></img>");
+				container.append("<img src='" + chosenOne.imageUrl + "' class='smallpartimg'></img>");
 			}
 		}
 
@@ -192,16 +191,18 @@
 
 			chosenOne = getRandomParticipant();
 
-			targetsToChugs[chosenOne.Name] = targetsToChugs[chosenOne.Name] || 0;
-			targetsToChugs[chosenOne.Name] += chugsToDistribute;
+			targetsToChugs[chosenOne.name] = targetsToChugs[chosenOne.name] || 0;
+			targetsToChugs[chosenOne.name] += chugsToDistribute;
 
 		}
+
+		var contenders = partyMachine.getParticipants();
 
 		var groupedBySips = [];
 
 		for (var p = 0; p < contenders.length; p++) {
 			var contender = contenders[p];
-			var sips = targetsToChugs[contender.Name] || 0;
+			var sips = targetsToChugs[contender.name] || 0;
 
 			if (sips) {
 				groupedBySips[sips] = groupedBySips[sips] || [];
@@ -223,13 +224,13 @@
 					chosenOne = contendersPerSip[c];
 
 
-//					setTimeout('try { playSound("#Content_audio_' + chosenOne.Name.toLowerCase() + '"); } catch(e) {}', soundDelay += soundDelayAdd);
+//					setTimeout('try { playSound("#Content_audio_' + chosenOne.name.toLowerCase() + '"); } catch(e) {}', soundDelay += soundDelayAdd);
 
 //					setTimeout('try { playSound("#sips' + sip + '"); } catch(e) {}', soundDelay += soundDelayAdd);
 
 					soundDelay += soundDelayAdd;
 
-					setTimeout(playSound("#Content_audio_" + chosenOne.Name.toLowerCase(), soundDelay));
+					setTimeout(playSound("#Content_audio_" + chosenOne.name.toLowerCase(), soundDelay));
 
 					soundDelay += soundSipsDelayAdd;
 
@@ -256,7 +257,7 @@
 		appendParticipant([chosenOne]);
 		playSound("#snuff");
 		
-		setTimeout(playSound("#Content_audio_" + chosenOne.Name.toLowerCase(), 2000));
+		setTimeout(playSound("#Content_audio_" + chosenOne.name.toLowerCase(), 2000));
 
 		exit();
 	}
@@ -268,7 +269,7 @@
 		var chosenOne = getRandomParticipant();
 		appendParticipant([chosenOne]);
 		playSound("#smoke");
-		setTimeout(playSound("#Content_audio_" + chosenOne.Name.toLowerCase(), 2000));
+		setTimeout(playSound("#Content_audio_" + chosenOne.name.toLowerCase(), 2000));
 
 		
 		exit();
@@ -308,7 +309,7 @@
 		var chosenOne = getRandomParticipant();
 		appendParticipant([chosenOne], "Starts drinking! Stop when he/she does!");
 		playSound("#waterfall");
-		setTimeout(playSound("#Content_audio_" + chosenOne.Name.toLowerCase(), 2000));
+		setTimeout(playSound("#Content_audio_" + chosenOne.name.toLowerCase(), 2000));
 
 		exit();
 	}
@@ -329,7 +330,7 @@
 		var chosenOne = getRandomParticipant();
 		appendParticipant([chosenOne]);
 		playSound("#spirits");
-		setTimeout(playSound("#Content_audio_" + chosenOne.Name.toLowerCase(), 2000));
+		setTimeout(playSound("#Content_audio_" + chosenOne.name.toLowerCase(), 2000));
 
 		exit();
 	}
