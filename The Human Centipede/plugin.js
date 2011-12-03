@@ -11,6 +11,12 @@
   };
 }
 
+function onload()
+{
+
+		
+}
+
 
 Player = function() {
 	this.currentPos = {x:0,y:0};
@@ -77,8 +83,19 @@ HumanCentipede.prototype = {
 					 2:{color:'#FF0066',start:{x:10,y:230},direction:2},
 					 3:{color:'#F00066',start:{x:310,y:230},direction:0},
 					},
+					
+	messageReceived: function(e) {
+		var data = JSON.parse(e.data);
+	
+		if (data.event === 'startPlugin') {
+			this.assignControllers(data.participants);
+			this.init();
+			this.startGame();
+		}
+	},
 
 	init: function() {
+
 		this.canvas = $('#maincanvas')[0];
 		this.fpsDiff = 1000 / this.fps;
 
@@ -100,32 +117,38 @@ HumanCentipede.prototype = {
 				this.board[x][y] = false;
 			}
 		}
+
+	$(document).keydown(function() {console.log("OK");});
+	$(document).keydown(method(this,this.onKeyDown));
+	this.switchBackground();
+	this.startGame();
 	
-	//this.switchBackground();
-	//this.startGame()
-		setTimeout(method(this,this.switchBackground,null),5000);
+
+	//	setTimeout(method(this,this.switchBackground,null),5000);
 	},
 
 	gameControllersAssigned: function() {
 		this.startGame();
 	},
 
-	assignControllers: function() {
-		var participants = partyMachine.getParticipants();
-
+	assignControllers: function(participants) {
+		
 		this.shuffle(participants);
 
-		var players = 3;
+		var players = 2;
 		var participantsActive = new Array();
 		for(var i = 0;i<players;i++) {
 			var player = this.newPlayer(i,participants[i]);
 			
 			this.players.push(player);
 			participantsActive.push(participants[i]);
-			console.log(player.participant.Name);
+			console.log(player.participant.name);
 		}
 
 		partyMachine.gameControllersAssigned =  method(this,this.gameControllersAssigned,null);
+
+		//THERE WILL BE NO ASSIGNING YET
+		return;
 
 		if(players == 1)
 			partyMachine.assignGameControllers(participantsActive[0]);
@@ -145,7 +168,7 @@ HumanCentipede.prototype = {
 
 		$('#players').show();
 		
-		setTimeout(method(this,this.assignControllers,null),2000);
+		//setTimeout(method(this,this.assignControllers,null),2000);
 	},
 
 	startGame: function() {
@@ -156,16 +179,16 @@ HumanCentipede.prototype = {
 	newPlayer: function(number,participant) {
 		var player = new Player();
 		player.image = $('.player')[number];
-		player.image.src = participant.ImageUrl;
+		player.image.src = participant.imageUrl;
 		
 		player.participant = participant;
-		player.participant.gameController.gamepadPressed = method(player,player.gamepadPressed,null);
+		//player.participant.gameController.gamepadPressed = method(player,player.gamepadPressed,null);
 		player.settings = this.playerDefaults[number];
 		player.currentPos.x = player.settings.start.x;
 		player.currentPos.y = player.settings.start.y;
 		player.currentDirection = player.settings.direction;
 
-		$('span',$(player.image).parent()).html(player.participant.Name);
+		$('span',$(player.image).parent()).html(player.participant.name);
 		
 		return player;
 	},
@@ -305,7 +328,7 @@ HumanCentipede.prototype = {
 	},
 
 	hasDied: function(player) {
-		console.log("Player died: " + player.participant.Name);
+		console.log("Player died: " + player.participant.name);
 		player.isDead = true;
 	},
 
@@ -342,57 +365,58 @@ HumanCentipede.prototype = {
 				arr[i] = tempj;
 				arr[j] = tempi;
 			}
-		}
+		},
 	
-//	 onKeyDown: function() {
-//		
-//			var e = window.event;
 
-//			if (e.keyCode == 37 /* LEFT */)
-//				this.player.keyboard.left = true;
-//			else if (e.keyCode == 38 /* UP */)
-//				this.player.keyboard.up = true;
-//			else if (e.keyCode == 39 /* RIGHT */)
-//				this.player.keyboard.right = true;
-//			else if (e.keyCode == 40 /* DOWN */)
-//				this.player.keyboard.down = true;
-//			else if (e.keyCode == 65 /* A */)
-//				rightKeysDown |= 1;
-//			else if (e.keyCode == 87 /* W */)
-//				rightKeysDown |= 2;
-//			else if (e.keyCode == 68 /* D */)
-//				rightKeysDown |= 4;
-//			else if (e.keyCode == 18 /* S */)
-//				rightKeysDown |= 8;
-//		},
+	 onKeyDown: function(e) {
+			if (e.keyCode == 37 /* LEFT */)
+				this.players[0].moveLeft();
+			else if (e.keyCode == 38 /* UP */)
+				this.players[0].moveUp();
+			else if (e.keyCode == 39 /* RIGHT */)
+				this.players[0].moveRight();
+			else if (e.keyCode == 40 /* DOWN */)
+				this.players[0].moveDown();
+			else if (e.keyCode == 65 /* A */)
+				this.players[1].moveLeft();
+			else if (e.keyCode == 87 /* W */)
+				this.players[1].moveUp();
+			else if (e.keyCode == 68 /* D */)
+				this.players[1].moveRight();
+			else if (e.keyCode == 83 /* S */)
+				this.players[1].moveDown();
+		},
 
-//		onKeyUp: function() {
-//		
-//			var e = window.event;
-//			console.log("Up:" + e.keyCode);
+		onKeyUp: function() {
+		
+			var e = window.event;
+			console.log("Up:" + e.keyCode);
 
-//			if (e.keyCode == 37 /* LEFT */)
-//				this.player.keyboard.left = false;
-//			else if (e.keyCode == 38 /* UP */)
-//				this.player.keyboard.up = false;
-//			else if (e.keyCode == 39 /* RIGHT */)
-//				this.player.keyboard.right = false;
-//			else if (e.keyCode == 40 /* DOWN */)
-//				this.player.keyboard.down = false;
-//			else if (e.keyCode == 65 /* A */)
-//				rightKeysDown |= 1;
-//			else if (e.keyCode == 87 /* W */)
-//				rightKeysDown |= 2;
-//			else if (e.keyCode == 68 /* D */)
-//				rightKeysDown |= 4;
-//			else if (e.keyCode == 18 /* S */)
-//				rightKeysDown |= 8;
-//		},
+			if (e.keyCode == 37 /* LEFT */)
+				this.player.moveLeft();
+			else if (e.keyCode == 38 /* UP */)
+				this.player.keyboard.up = false;
+			else if (e.keyCode == 39 /* RIGHT */)
+				this.player.keyboard.right = false;
+			else if (e.keyCode == 40 /* DOWN */)
+				this.player.keyboard.down = false;
+			else if (e.keyCode == 65 /* A */)
+				rightKeysDown |= 1;
+			else if (e.keyCode == 87 /* W */)
+				rightKeysDown |= 2;
+			else if (e.keyCode == 68 /* D */)
+				rightKeysDown |= 4;
+			else if (e.keyCode == 18 /* S */)
+				rightKeysDown |= 8;
+		},
+
 };
 
 
 $(function() {
 	var plugin = new HumanCentipede();
-	plugin.init();
+	$.receiveMessage(function (e) {
+		plugin.messageReceived(e);
+	});
 });
 
