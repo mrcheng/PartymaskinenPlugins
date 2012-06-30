@@ -31,20 +31,11 @@
 			return { x: pos.x * 16, y: pos.y * 16 };
 		}
 
-		function onload()
+		function partyMachinePlugin(participants)
 		{
-			$.receiveMessage(function (e) {
-			
-				var data = JSON.parse(e.data);
+			this.participants = participants;
 
-				if (data.event === 'startPlugin') {
-					participants = data.participants;
-				}
-				
-				setTimeout('init()', 2000);
-			
-			});
-				
+			setTimeout('init()', 2000);
 		}
 
 		function init()

@@ -11,9 +11,23 @@
 		.Paddle { background-color: #fff; position: absolute; width: 15px; height: 60px; }
 		#divRightPaddle { right: 0; }
 		#divBall { background-color: #fff; position: absolute; width: 15px; height: 15px; left: 392px; top: 285px; }
+		
+		
+		.assignGameControllersOverlay
+		{
+			background-color: #000;
+			opacity: 1;
+			filter: alpha(opacity=70);
+			position: absolute; top: 0; left: 0;
+			width: 100%; height: 100%;
+			z-index: 9999;
+		}
 	</style>
-
-	<script type="text/javascript" src="PartyMachine.js"></script>
+	
+	<object id="boomstickplugin" type="application/x-boomstickjavascriptjoysticksupport" width="0" height="0"></object>
+	
+	<script src="http://localhost:1645/Partymaskinen/partymachine.client.loader.js" type="text/javascript"></script>
+	
 	<script type="text/javascript">
 		var FPS = 30;
 		var PADDLE_HEIGHT = 60;
@@ -49,50 +63,60 @@
 		var gameStarted = false;
 		var gameOver = false;
 		var loserParticipant;
-
+		var participants;
+		
 //TODO: parseInt divisions
-		function onload()
-		{
-			var participants = partyMachine.getParticipants();
-			shuffle(participants);
 
-			leftParticipant = participants[0];
-			rightParticipant = participants[1];
+		function partyMachinePlugin(participants) {
+			console.log("partyMachinePlugin");
+			$(function () {
+				console.log("doc ready plugin");
 
-			document.getElementById('imgLeftParticipant').src = leftParticipant.ImageUrl;
-			document.getElementById('h1LeftParticipant').innerText = leftParticipant.Name;
-			document.getElementById('imgRightParticipant').src = rightParticipant.ImageUrl;
-			document.getElementById('h1RightParticipant').innerText = rightParticipant.Name;
+				console.log("receiveMessage");
 
-			leftPaddle = document.getElementById('divLeftPaddle');
-			rightPaddle = document.getElementById('divRightPaddle');
-			ball = document.getElementById('divBall');
+				shuffle(participants);
 
-			canvas = document.getElementById('canvas');
-			ctx = canvas.getContext('2d');
+				leftParticipant = participants[0];
+				rightParticipant = participants[1];
+						
+				document.getElementById('imgLeftParticipant').src = leftParticipant.imageUrl;
+				document.getElementById('h1LeftParticipant').innerText = leftParticipant.name;
+				document.getElementById('imgRightParticipant').src = rightParticipant.imageUrl;
+				document.getElementById('h1RightParticipant').innerText = rightParticipant.name;
 
-			renderBoard();
+				leftPaddle = document.getElementById('divLeftPaddle');
+				rightPaddle = document.getElementById('divRightPaddle');
+				ball = document.getElementById('divBall');
 
-			init();
+				canvas = document.getElementById('canvas');
+				ctx = canvas.getContext('2d');
 
-			partyMachine.gameControllersAssigned = function()
-			{
-				document.getElementById('divParticipants').style.display = '';
+				renderBoard();
 
-				leftParticipant.gameController.joystick = function(x, y)
+				init();
+
+				var gameControllersAssigned = function()
 				{
-					leftJoystickPos = y;
-				};
-				rightParticipant.gameController.joystick = function(x, y)
-				{
-					rightJoystickPos = y;
+					document.getElementById('divParticipants').style.display = '';
+
+					leftParticipant.gameController.joystick = function(x, y)
+					{
+						leftJoystickPos = y;
+					};
+					rightParticipant.gameController.joystick = function(x, y)
+					{
+						rightJoystickPos = y;
+					};
+
+					gameLoop();
+
+					setTimeout('ready()', 2000);
 				};
 
-				gameLoop();
+				partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [leftParticipant, rightParticipant]);
 
-				setTimeout('ready()', 2000);
-			};
-			partyMachine.assignGameControllers(leftParticipant, rightParticipant);
+				setTimeout('init()', 2000);
+			});
 		}
 
 		function renderBoard()
@@ -168,8 +192,8 @@
 		function renderLoser()
 		{
 			document.getElementById('divLoser').style.display = '';
-			document.getElementById('imgLoser').src = loserParticipant.ImageUrl;
-			document.getElementById('h1Loser').innerText = loserParticipant.Name;
+			document.getElementById('imgLoser').src = loserParticipant.imageUrl;
+			document.getElementById('h1Loser').innerText = loserParticipant.name;
 		}
 
 		function gameLoop()
@@ -315,7 +339,7 @@
 		}
 	</script>
 </head>
-<body onload="onload()">
+<body>
 	<div style="width: 800px; margin-left: auto; margin-right: auto; position: relative;">
 		<div id="divParticipants" style="display: none">
 			<table width="100%" cellpadding="15">
