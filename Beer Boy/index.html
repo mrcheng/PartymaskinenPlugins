@@ -8,7 +8,7 @@
 	</style>
 
 	<script language="javascript" type="text/javascript">
-		(function () { function e() { var e = {}; return function () { var t, n = /\+/g, r = /([^&=]+)=?([^&]*)/g, i = function (e) { return decodeURIComponent(e.replace(n, " ")) }, s = window.location.search.substring(1); while (t = r.exec(s)) e[i(t[1])] = i(t[2]) } (), e } var t = e(), n = t.loader, r = decodeURIComponent(n); if (typeof n == "undefined") { var i = "http://mrcheng.github.com/Partymaskinen/partymachine.client.loader.js?pluginDev=1"; alert("Missing url to loader in querystring, defaulting to " + i), r = i } document.write('<script type="text/javascript" src="' + r + '"></scr' + "ipt>") })()
+		(function () { function e() { var e = {}; return function () { var t, n = /\+/g, r = /([^&=]+)=?([^&]*)/g, i = function (e) { return decodeURIComponent(e.replace(n, " ")) }, s = window.location.search.substring(1); while (t = r.exec(s)) e[i(t[1])] = i(t[2]) } (), e } var t = e(), n = t.loader, r = decodeURIComponent(n); if (typeof n == "undefined") { var i = "http://mrcheng.github.com/Partymaskinen/", s = i + "partymachine.client.loader.js?pluginDev=1&baseUrl=" + encodeURIComponent(i); alert("Missing url to loader in querystring, defaulting to " + s), r = s } document.write('<script type="text/javascript" src="' + r + '"></scr' + "ipt>") })()
 	</script>
 	
 	<script type="text/javascript" src="board.js"></script>

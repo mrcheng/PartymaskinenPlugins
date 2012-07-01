@@ -23,7 +23,8 @@
 	var loaderUrl = decodeURIComponent(encodedLoaderUrl);
 
 	if (typeof encodedLoaderUrl === "undefined") {
-		var defaultUrl = 'http://mrcheng.github.com/Partymaskinen/partymachine.client.loader.js?pluginDev=1';
+		var baseUrl = 'http://mrcheng.github.com/Partymaskinen/';
+		var defaultUrl = baseUrl + 'partymachine.client.loader.js?pluginDev=1&baseUrl=' + encodeURIComponent(baseUrl);
 		alert("Missing url to loader in querystring, defaulting to " + defaultUrl);
 		loaderUrl = defaultUrl;
 	}
