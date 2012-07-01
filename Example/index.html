@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Example/Test/PluginTemplate plugin</title>
+	
+	<!-- Required for controllers -->
+	<object id="boomstickplugin" type="application/x-boomstickjavascriptjoysticksupport" width="0" height="0"></object>
+	
+	<!-- PartyMachine plugin javascript loader -->
+	<script language="javascript" type="text/javascript">
+		(function () { function e() { var e = {}; return function () { var t, n = /\+/g, r = /([^&=]+)=?([^&]*)/g, i = function (e) { return decodeURIComponent(e.replace(n, " ")) }, s = window.location.search.substring(1); while (t = r.exec(s)) e[i(t[1])] = i(t[2]) } (), e } var t = e(), n = t.loader, r = decodeURIComponent(n); if (typeof n == "undefined") { var i = "http://mrcheng.github.com/Partymaskinen/partymachine.client.loader.js?pluginDev=1"; alert("Missing url to loader in querystring, defaulting to " + i), r = i } document.write('<script type="text/javascript" src="' + r + '"></scr' + "ipt>") })()
+	</script>
+
+	<!-- This needs to be in its own script tag, due to the scriptloader. -->
+
+	<script type="text/javascript">
+		// Loader will call this method when it's done loading.
+		function partyMachinePlugin(participants) {
+
+			// Plugin loader is done
+			
+			console.log("plugin.partyMachinePlugin()");
+
+			$(function () {
+				
+				console.log("plugin.ready()");
+				
+				console.log(participants);
+
+				// Most plugin code should go here!
+				
+			});
+		}
+	</script>
+	
+</head>
+<body>
+	<h1>Example/Test/PluginTemplate plugin.</h1>
+</body>
+</html>
