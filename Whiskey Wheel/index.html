@@ -3,32 +3,44 @@
 <head>
 	<title>Whiskey Wheel</title>
 	<style type="text/css">
-    body {background-image:url('back.png');background-size: 100%;}
-    #center{width:100%;margin:auto auto auto auto;}
-    #middle{margin: 0 auto;width:500px;padding-top:270px;}
-    html{overflow:hidden;}
-  </style>
+		body
+		{
+			background-image: url('back.png');
+			background-size: 100%;
+		}
+		#center
+		{
+			width: 100%;
+			margin: auto auto auto auto;
+		}
+		#middle
+		{
+			margin: 0 auto;
+			width: 500px;
+			padding-top: 270px;
+		}
+		html
+		{
+			overflow: hidden;
+		}
+	</style>
 </head>
-<body onLoad="load()">
-   <div id="center">
-    <div id="middle">
-      <audio src="45.mp3" autobuffer="" autoplay=""></audio>
-      <canvas id="wheelcanvas" width="500" height="500" style="margin-top:-80px;"></canvas>
-      <script src="http://mrcheng.github.com/Partymaskinen/deps/json2.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/jquery.ba-postmessage.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.js" type="text/javascript"></script>
-      
-      <script type="application/javascript">
+<body>
+	<div id="center">
+		<div id="middle">
+			<audio src="45.mp3" autobuffer="" autoplay=""></audio>
+			<canvas id="wheelcanvas" width="500" height="500" style="margin-top: -80px;"></canvas>
+			<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+			<script type="application/javascript">
 
-        var colors = ["#B8D430", "#3AB745", "#029990", "#3501CB",
+				var colors = ["#B8D430", "#3AB745", "#029990", "#3501CB",
         "#2E2C75", "#673A7E", "#CC0071", "#F80120",
         "#F35B20", "#FB9A00", "#FFCC00", "#FEF200"];
 
-        var chengs = [];
-        var contenders = new Array()
+				var chengs = [];
+				var contenders = new Array()
 
-        
+
 
 				var startAngle = 0;
 				var arc = Math.PI / 6;
@@ -96,36 +108,30 @@
 					}
 				}
 
+				function partyMachinePlugin(participants) {
+					console.log("partyMachinePlugin");
+					$(function () {
+						chengs = participants;
 
-				function load() {
-					$.receiveMessage(function (e) {
-			
-						var data = JSON.parse(e.data);
-
-						if (data.event === 'startPlugin') {
-							chengs = data.participants;
-						
-							for (var p = 0; p < chengs.length; p++) {
-								contenders.push(chengs[p].name);
-							}
-							
-							draw();
-							
-							setTimeout('spin()', 5000);
-							
+						for (var p = 0; p < chengs.length; p++) {
+							contenders.push(chengs[p].name);
 						}
+
+						draw();
+
+						setTimeout('spin()', 5000);
 					});
 				}
-				
+
 				function spin() {
-					
+
 					playSound('6.mp3');
 					spinAngleStart = Math.random() * 10 + 10;
 					spinTime = 0;
 					spinTimeTotal = Math.random() * 3 + 4 * 1000;
 					rotateWheel();
 				}
-				
+
 				function rotateWheel() {
 					spinTime += 30;
 					if (spinTime >= spinTimeTotal) {
@@ -149,9 +155,9 @@
 
 					var contenderImage = new Image();
 
-					contenderImage.src = chengs[index].ImageUrl;					
+					contenderImage.src = chengs[index].ImageUrl;
 
-					contenderImage.onload = function() {
+					contenderImage.onload = function () {
 						ctx.drawImage(contenderImage, 185, 190, 128, 128);
 					}
 
@@ -166,16 +172,14 @@
 					return b + c * (tc + -3 * ts + 3 * t);
 				}
 
-				function playSound(path)
-				{
+				function playSound(path) {
 					var audio = document.createElement('AUDIO');
 					audio.src = path;
 					audio.play();
 				}
 
-      </script>
-    </div>
-  </div>
+			</script>
+		</div>
+	</div>
 </body>
 </html>
-

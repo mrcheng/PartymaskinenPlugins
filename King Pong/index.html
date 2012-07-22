@@ -25,9 +25,7 @@
 	
 	<object id="boomstickplugin" type="application/x-boomstickjavascriptjoysticksupport" width="0" height="0"></object>
 	
-	<script language="javascript" type="text/javascript">
-		(function () { function e() { var e = {}; return function () { var t, n = /\+/g, r = /([^&=]+)=?([^&]*)/g, i = function (e) { return decodeURIComponent(e.replace(n, " ")) }, s = window.location.search.substring(1); while (t = r.exec(s)) e[i(t[1])] = i(t[2]) } (), e } var t = e(), n = t.loader, r = decodeURIComponent(n); if (typeof n == "undefined") { var i = "http://mrcheng.github.com/Partymaskinen/", s = i + "partymachine.client.loader.js"; alert("Missing url to loader in querystring, defaulting to " + s), r = s } document.write('<script type="text/javascript" src="' + r + '"></scr' + "ipt>") })()
-	</script>
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
 
 	<script type="text/javascript">
 		var FPS = 30;

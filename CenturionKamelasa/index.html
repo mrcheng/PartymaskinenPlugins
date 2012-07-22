@@ -15,29 +15,29 @@
 		src: url(JerseyM54.ttf);
 	}
 	</style>
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/json2.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/jquery.ba-postmessage.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.js" type="text/javascript"></script>
-	<script src="jquery.min.js"></script>
-	<script src="jquery-ui.min.js"></script>
+	
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+
 	<script src="CenturionKamelasa.js" type="text/javascript"></script>
 
-
-	<script type="text/javascript" src="jquery.countDown.js"></script>
 </head>
 <body>
 	<script language="JavaScript">
-	    $(document).ready(function () 
-	    {
-	        var ctx = $('#canvas')[0].getContext("2d");
-			
-			var ck = new CenturionKamelasa(ctx, 800, 600);
-            
-            setInterval(ck.draw, 1000);
-            setInterval(ck.drawScroller, 30);
-	    });
-    </script>
+
+		function partyMachinePlugin() {
+		
+			$(document).ready(function() {
+				var ctx = $('#canvas')[0].getContext("2d");
+
+				var ck = new CenturionKamelasa(ctx, 800, 600);
+
+				setInterval(ck.draw, 1000);
+				setInterval(ck.drawScroller, 30);
+			});
+
+		}
+		
+	</script>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
 		<canvas id="canvas" width="800" height="600" style="margin:-8; style="margin-top:-8"></canvas>
 	</div>
