@@ -67,12 +67,7 @@
 //TODO: parseInt divisions
 
 		function partyMachinePlugin(participants) {
-			console.log("partyMachinePlugin");
 			$(function () {
-				console.log("doc ready plugin");
-
-				console.log("receiveMessage");
-
 				shuffle(participants);
 
 				leftParticipant = participants[0];
@@ -112,8 +107,6 @@
 				};
 
 				partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [leftParticipant, rightParticipant]);
-
-				setTimeout('init()', 2000);
 			});
 		}
 
