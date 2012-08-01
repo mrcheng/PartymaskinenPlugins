@@ -13,11 +13,12 @@
 		#unicorn {margin-left: auto;margin-right: auto;position:fixed;z-index:10;}
 		#txtCountdown{color: #FFF;text-align: center;font-size:180px;margin-left: auto;margin-right: auto;margin-top:130px;}
 	</style>
-	<script type="text/javascript" src="PartyMachine.js"></script>
-	<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+	
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+
 	<script type="text/javascript">
 
-    var ball;
+	var ball;
     var paddle;
     var score;
 
@@ -30,7 +31,14 @@
     var ballTop = 4;
     var FPS = 30;
     var countdown = 5;
+    var participants = [];
 
+    function partyMachinePlugin(participants) {
+    	this.participants = participants;
+
+    	setTimeout('init()', 2000);
+    }
+    
     function playSound(path) {
     	var audio = document.createElement('AUDIO');
     	audio.autoplay = true;
@@ -61,20 +69,32 @@
 	    	ball = $('#ball');
 	    	paddle = $('#paddle');
 	    	score = document.getElementById('score');
-		partyMachine.getCurrentParticipant().gameController.gamepadPressed = function(left, up, right, down) {
-			if (left)
-				leftPressed = true;
-			else if (right)
-				rightPressed = true;
-		};
-		partyMachine.getCurrentParticipant().gameController.gamepadReleased = function(left, up, right, down) {
-			if (left)
-				leftPressed = false;
-			else if (right)
-				rightPressed = false;
-		};
 
-   		start();
+	    	for (var p = 0; p < participants.length; p++ ) {
+
+
+	    		var cp = participants[p];
+	    		
+	    		cp.gameController.gamepadPressed = function (left, up, right, down) {
+	    			if (left)
+	    				leftPressed = true;
+	    			else if (right)
+	    				rightPressed = true;
+	    		};
+
+	    		cp.gameController.gamepadReleased = function (left, up, right, down) {
+	    			if (left)
+	    				leftPressed = false;
+	    			else if (right)
+	    				rightPressed = false;
+	    		};
+		
+
+	    	}
+
+	    	partyMachineParticipantControllerSelectors.assignParticipants(participants);
+	    		
+   			start();
 	    }
 
 		function start() {
