@@ -1,94 +1,121 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>You are my bitch</title>
-    <script type="text/javascript" src="PartyMachine.js"></script>
-    <script type="text/javascript" src="mersenne-twister.js"></script>
-    <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
-  
-    <script type="text/javascript">
+	<title>You are my bitch</title>
 
-      function playSound(path)
-      {
-      var audio = document.createElement('AUDIO');
-      audio.autoplay = true;
-      audio.src = path;
-      audio.play();
-      }
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
 
-      function onload() {
-      var contenders = partyMachine.getParticipants();
-      var timeout = 300000;
+	<script type="text/javascript" src="mersenne-twister.js"></script>
 
-      if (!contenders || contenders.length <= 0) {
-                partyMachine.exit();
-            }
+	<script type="text/javascript">
 
-            var m = new MersenneTwister();
-            var firstContender = m.genrand_int31() % contenders.length;
-            var secondContender = m.genrand_int31() % contenders.length;
+		function playSound(path) {
+			var audio = document.createElement('AUDIO');
+			audio.autoplay = true;
+			audio.src = path;
+			audio.play();
+		}
 
-            if (contenders.length > 1) {
-                while (firstContender === secondContender) {
-                    secondContender = m.genrand_int31() % contenders.length;
-                }
-            }
+		function partyMachinePlugin(contenders) {
 
-            var contenderHtml = '';
-            var textContenderHtml = '';
+			var timeout = 300000;
 
-            for (var c = 0; c < contenders.length; c++) {
-                var contender = contenders[c];
-                contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.ImageUrl + '"/></span>';
-            }
+			if (!contenders || contenders.length <= 0) {
+				partyMachine.exit();
+			}
 
-            textContenderHtml = '<font face=\'verdana\' size=\'5\' color=\'#ffffff\'><b>' + contenders[firstContender].Name + ' owns ' + contenders[secondContender].Name + 's ass. ' + contenders[secondContender].Name + ' is a <font color=\'#faafba\'>BITCH</font> for ' + ((timeout/1000)/60) + ' minutes!</b></font>';
+			var m = new MersenneTwister();
+			var firstContender = m.genrand_int31() % contenders.length;
+			var secondContender = m.genrand_int31() % contenders.length;
 
-              $("#contenders").html(contenderHtml);
-              $("#textContenders").html(textContenderHtml);
+			if (contenders.length > 1) {
+				while (firstContender === secondContender) {
+					secondContender = m.genrand_int31() % contenders.length;
+				}
+			}
 
-              playSound('ymb.mp3');
-              //var audio = document.createElement('AUDIO');
-              //audio.autoplay = true;
-              //audio.src = 'ymb.mp3';
-              //audio.loop = true;
-              //audio.play();
+			var contenderHtml = '';
+			var textContenderHtml = '';
 
-              var dudesChosen = new Array();
-              while (dudesChosen.length != contenders.length - 2) {
-              var newlyChosen = m.genrand_int31() % contenders.length;
+			for (var c = 0; c < contenders.length; c++) {
+				var contender = contenders[c];
+				contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.ImageUrl + '"/></span>';
+			}
 
-              if (newlyChosen != firstContender
+			textContenderHtml = '<font face=\'verdana\' size=\'5\' color=\'#ffffff\'><b>' + contenders[firstContender].name + ' owns ' + contenders[secondContender].name + 's ass. ' + contenders[secondContender].Name + ' is a <font color=\'#faafba\'>BITCH</font> for ' + ((timeout / 1000) / 60) + ' minutes!</b></font>';
+
+			$("#contenders").html(contenderHtml);
+			$("#textContenders").html(textContenderHtml);
+
+			playSound('ymb.mp3');
+
+			var dudesChosen = new Array();
+			while (dudesChosen.length != contenders.length - 2) {
+				var newlyChosen = m.genrand_int31() % contenders.length;
+
+				if (newlyChosen != firstContender
               && newlyChosen != secondContender
 				&& $.inArray(newlyChosen, dudesChosen) == -1) {
-                    dudesChosen.push(newlyChosen);
-                    $("#contender_" + newlyChosen).fadeOut(7000, function() {
-                        // Animation complete.
-                    });
+					dudesChosen.push(newlyChosen);
+					$("#contender_" + newlyChosen).fadeOut(7000, function () {
+						// Animation complete.
+					});
 
-                    $("#textContenders").fadeIn(15000, function() {
-                        // Animation complete.
-                    });
-                }
-            }
+					$("#textContenders").fadeIn(15000, function () {
+						// Animation complete.
+					});
+				}
+			}
 
-            setTimeout('partyMachine.exit()', 20000); 
-        }
-    </script>
-    <style>
-    	.box{position:absolute;margin: auto 0;text-align:center;width:100%;}
-    	.box b{font-family:Verdana, Geneva, Tahoma, sans-serif;font-size:40px;color:#fff;}
-    	.box i{font-family:Verdana, Geneva, Tahoma, sans-serif;font-size:40px;color:#faafba;font-style:normal;font-weight:bold;}
-    	#contenders{position:absolute;margin: auto 0;margin-top:100px;}
-    	#textContenders{position:absolute;margin: auto 0;}
-    	html{overflow:hidden;}
-    </style>
+			setTimeout('partyMachine.exit()', 20000);
+		}
+	</script>
+	<style>
+		.box
+		{
+			position: absolute;
+			margin: auto 0;
+			text-align: center;
+			width: 100%;
+		}
+		.box b
+		{
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+			font-size: 40px;
+			color: #fff;
+		}
+		.box i
+		{
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+			font-size: 40px;
+			color: #faafba;
+			font-style: normal;
+			font-weight: bold;
+		}
+		#contenders
+		{
+			position: absolute;
+			margin: auto 0;
+			margin-top: 100px;
+		}
+		#textContenders
+		{
+			position: absolute;
+			margin: auto 0;
+		}
+		html
+		{
+			overflow: hidden;
+		}
+	</style>
 </head>
-    <body bgcolor="#000000" onload="onload()">
-    	<div class="box">
-	    	<b>Mr Cheng - You are my </b><i>bitch</i>	        
-	        <div id="contenders"></div>
-	        <div id="textContenders" style="display: none;"></div>
+<body bgcolor="#000000">
+	<div class="box">
+		<b>Mr Cheng - You are my </b><i>bitch</i>
+		<div id="contenders">
 		</div>
-    </body>
+		<div id="textContenders" style="display: none;">
+		</div>
+	</div>
+</body>
 </html>

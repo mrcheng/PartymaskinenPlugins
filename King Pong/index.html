@@ -11,8 +11,7 @@
 		.Paddle { background-color: #fff; position: absolute; width: 15px; height: 60px; }
 		#divRightPaddle { right: 0; }
 		#divBall { background-color: #fff; position: absolute; width: 15px; height: 15px; left: 392px; top: 285px; }
-		
-		
+				
 		.assignGameControllersOverlay
 		{
 			background-color: #000;
@@ -26,8 +25,8 @@
 	
 	<object id="boomstickplugin" type="application/x-boomstickjavascriptjoysticksupport" width="0" height="0"></object>
 	
-	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.loader.js" type="text/javascript"></script>
-	
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+
 	<script type="text/javascript">
 		var FPS = 30;
 		var PADDLE_HEIGHT = 60;
@@ -68,12 +67,7 @@
 //TODO: parseInt divisions
 
 		function partyMachinePlugin(participants) {
-			console.log("partyMachinePlugin");
 			$(function () {
-				console.log("doc ready plugin");
-
-				console.log("receiveMessage");
-
 				shuffle(participants);
 
 				leftParticipant = participants[0];
@@ -95,27 +89,24 @@
 
 				init();
 
-				var gameControllersAssigned = function()
-				{
+				leftParticipant.gameController.joystick = function (x, y) {
+					leftJoystickPos = y;
+				};
+
+				rightParticipant.gameController.joystick = function (x, y) {
+					rightJoystickPos = y;
+				};
+					
+				var gameControllersAssigned = function () {
+					
 					document.getElementById('divParticipants').style.display = '';
-
-					leftParticipant.gameController.joystick = function(x, y)
-					{
-						leftJoystickPos = y;
-					};
-					rightParticipant.gameController.joystick = function(x, y)
-					{
-						rightJoystickPos = y;
-					};
-
+					
 					gameLoop();
 
 					setTimeout('ready()', 2000);
 				};
 
 				partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [leftParticipant, rightParticipant]);
-
-				setTimeout('init()', 2000);
 			});
 		}
 
