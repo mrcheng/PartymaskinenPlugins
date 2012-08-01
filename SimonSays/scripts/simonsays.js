@@ -14,77 +14,83 @@ function SimonSays()
 
 	// ---------------------------------------------
 
-	this.gameStart = function ()
+	this.gameStart = function (participants)
 	{
 		$("#score-board").html('<h1>' + 'Can you beat Simon?' + '</h1><br /><p>Press a key to start...</p>').css("display","block");
 		updateScore();
 
-		$(window).keydown(function(e)
-		{
-			key = (e.keyCode) ? e.keyCode : e.which;
 
-			if($("#score-board").css("display") != "none")
-			{
-				console.log("Hiding Score-Board");
-				$("#score-board").hide();
-				isListening = false;
+		for (var p = 0; p < participants.length; p++) {
 
-				score = 0;
-				currentColorIndex = 0;
-				currentColors = [];
+			var cp = participants[p];
 
-				showNextColor();
-			}
-			else if(isListening)
-			{
-				console.log("Checking key!");
+			cp.gameController.gamepadPressed = function (left, up, right, down) {
+				
+				if ($("#score-board").css("display") != "none") {
+					console.log("Hiding Score-Board");
+					$("#score-board").hide();
+					isListening = false;
 
-				if(e.which == 65)		//a
-				{
-					if(checkCurrentColor("green"))
-						greenPad();
-					else
-						gameOver();
-				}
-				else if(e.which == 87)	//w
-				{
-					if(checkCurrentColor("red"))
-						redPad();
-					else
-						gameOver();
-				}
-				else if(e.which == 68)	//d
-				{
-					if(checkCurrentColor("blue"))
-						bluePad();
-					else
-						gameOver();
-				}
-				else if(e.which == 83)	//s
-				{
-					if(checkCurrentColor("yellow"))
-						yellowPad();
-					else
-						gameOver();
-				}
+					score = 0;
+					currentColorIndex = 0;
+					currentColors = [];
 
-				if(currentColorIndex == currentColors.length)
-				{
-					score++;
 					showNextColor();
 				}
-			}
-			else
-			{
-				console.log("Is NOT Listening!");
-			}
-		});
+				else if (isListening) {
+					console.log("Checking key!");
 
-		$(window).keyup(function(e)
-		{
-			if(isListening)
-				hidePads();
-		});
+					if (left)		//a
+					{
+						if (checkCurrentColor("green"))
+							greenPad();
+						else
+							gameOver();
+					}
+					else if (up)	//w
+					{
+						if (checkCurrentColor("red"))
+							redPad();
+						else
+							gameOver();
+					}
+					else if (right)	//d
+					{
+						if (checkCurrentColor("blue"))
+							bluePad();
+						else
+							gameOver();
+					}
+					else if (down)	//s
+					{
+						if (checkCurrentColor("yellow"))
+							yellowPad();
+						else
+							gameOver();
+					}
+
+					if (currentColorIndex == currentColors.length) {
+						score++;
+						showNextColor();
+					}
+				}
+				else {
+					console.log("Is NOT Listening!");
+				}
+				
+			};
+
+			cp.gameController.gamepadReleased = function (left, up, right, down) {
+		
+				if (isListening)
+					hidePads();
+			
+			};
+
+		}
+
+		partyMachineParticipantControllerSelectors.assignParticipants(participants);
+	    	
 	}
 
 	// ---------------------------------------------

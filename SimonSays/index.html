@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,7 +17,9 @@
 	#score{position:absolute;margin-left:49%;margin-top:57%;color:#ff0000;text-align:center;overflow:hidden;z-index:-1}
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+
 <script src="scripts/simonsays.js" language="javascript" type="text/javascript"></script>
 
 <script src="scripts/soundmanager2.js"></script>
@@ -30,11 +32,12 @@
 
 	var simonSays = new SimonSays();
 
-	$(document).ready(function(){
-
-		simonSays.gameStart();
-
-	});
+	function partyMachinePlugin(participants) {
+		$(function() {
+			simonSays.gameStart(participants);
+		});
+	}
+	
 
 	var soundGreen;
 	var soundRed;
