@@ -16,7 +16,7 @@ function SimonSays()
 
 	this.gameStart = function (participants)
 	{
-		$("#score-board").html('<h1>' + 'Can you beat Simon?' + '</h1><br /><p>Press a key to start...</p>').css("display","block");
+		$("#score-board").html('<h1>' + 'Can you beat Simon?' + '</h1><br /><p>Push a button to start...</p>').css("display","block");
 		updateScore();
 
 
