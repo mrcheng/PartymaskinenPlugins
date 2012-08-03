@@ -2,62 +2,63 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-    <title>Tangera</title>
+	<title>Tangera</title>
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+	
+	<script type="text/javascript">
+		require("Content_js_mersenne-twister.js");
+		require("Content_js_tangera.js");
+	</script>
+
 	<link rel="stylesheet" href="Content_css_reset_rtl.css" />
 	<link rel="stylesheet" href="Content_css_text_rtl.css" />
 	<link rel="stylesheet" href="Content_css_960_rtl.css" />
-	<link rel="stylesheet" href="Content_fonts_specimen_files_specimen_stylesheet.css" type="text/css" />
+	<link rel="stylesheet" href="Content_fonts_specimen_files_specimen_stylesheet.css"
+		type="text/css" />
 	<link rel="stylesheet" href="Content_fonts_chicamonoregular_stylesheet.css" type="text/css" />
 	<link rel="stylesheet" href="Content_css_tangera.css">
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/json2.js" type="text/javascript"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/jquery.ba-postmessage.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.js" type="text/javascript"></script>
 	<script src="Content_fonts_specimen_files_easytabs.js" type="text/javascript"></script>
-	<script type="text/javascript" src="Content_js_mersenne-twister.js"></script>
-	<script src="Content_js_tangera.js"></script>
+	
 	<script type="text/javascript">
 
-		function fadeInInstr() {
-			var cardInstructionContainers = $("#instructions").find('.cardinstruction_cnt');
+		function partyMachinePlugin(participants) {
 
-			$.each(cardInstructionContainers, function (index, value) {
-				var target = $(value);
-				var waitUntilFade = 400 * ((parseInt(target.attr("rel"), 10) + 1));
-				$(value).fadeIn(waitUntilFade);
-			});
+
+			function fadeInInstr() {
+				var cardInstructionContainers = $("#instructions").find('.cardinstruction_cnt');
+
+				$.each(cardInstructionContainers, function (index, value) {
+					var target = $(value);
+					var waitUntilFade = 400 * ((parseInt(target.attr("rel"), 10) + 1));
+					$(value).fadeIn(waitUntilFade);
+				});
+			}
+
+			function fadeOutInstr() {
+				var cardInstructionContainers = $("#instructions").find('.cardinstruction_cnt');
+				var maxFadeOut = 0;
+
+				$.each(cardInstructionContainers, function (index, value) {
+					var target = $(value);
+					var waitUntilFade = 400 * (cardInstructionContainers.length - (parseInt(target.attr("rel"), 10) + 1));
+
+					if (waitUntilFade > maxFadeOut) {
+						maxFadeOut = waitUntilFade;
+					}
+
+					$(value).fadeOut(waitUntilFade);
+				});
+
+				setTimeout("$('#gamecnt').fadeIn('normal');", maxFadeOut);
+				setTimeout("tangera.getCard();", maxFadeOut + 2000);
+			}
+
+
+			tangera.init(participants);
+			fadeInInstr();
+			setTimeout("fadeOutInstr()", 10000);
+
 		}
-
-		function fadeOutInstr() {
-			var cardInstructionContainers = $("#instructions").find('.cardinstruction_cnt');
-			var maxFadeOut = 0;
-
-			$.each(cardInstructionContainers, function (index, value) {
-				var target = $(value);
-				var waitUntilFade = 400 * (cardInstructionContainers.length - (parseInt(target.attr("rel"), 10) + 1));
-
-				if (waitUntilFade > maxFadeOut) {
-					maxFadeOut = waitUntilFade;
-				}
-
-				$(value).fadeOut(waitUntilFade);
-			});
-
-			setTimeout("$('#gamecnt').fadeIn('normal');", maxFadeOut);
-			setTimeout("tangera.getCard();", maxFadeOut + 2000);
-		}
-
-		$(function () {
-			$.receiveMessage(function (e) {
-				var data = JSON.parse(e.data);
-
-				if (data.event === 'startPlugin') {
-					tangera.init(data.participants);
-					fadeInInstr();
-					setTimeout("fadeOutInstr()", 10000);
-				}
-			});
-		});
  
 	</script>
 </head>
@@ -178,101 +179,100 @@
 		<!-- end .grid_6 -->
 	</div>
 	<audio id="background" preload>
-            <source src="Content_audio_background.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_background.mp3" type="audio/mp3">
+	</audio>
 	<audio id="shuffle" preload>
-            <source src="Content_audio_shuffle.mp3" type="audio/mp3">
-        </audio>
+		<source src="Content_audio_shuffle.mp3" type="audio/mp3">
+	</audio>
 	<audio id="card_drop" preload>
-            <source src="Content_audio_cardSlap.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_cardSlap.mp3" type="audio/mp3">
+	</audio>
 	<audio id="chug" preload>
-            <source src="Content_audio_chug.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_chug.mp3" type="audio/mp3">
+	</audio>
 	<audio id="smoke" preload>
-            <source src="Content_audio_smoke.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_smoke.mp3" type="audio/mp3">
+	</audio>
 	<audio id="snuff" preload>
-            <source src="Content_audio_snuff.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_snuff.mp3" type="audio/mp3">
+	</audio>
 	<audio id="waterfall" preload>
-            <source src="Content_audio_waterfall.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_waterfall.mp3" type="audio/mp3">
+	</audio>
 	<audio id="shout" preload>
-            <source src="Content_audio_shout.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_shout.mp3" type="audio/mp3">
+	</audio>
 	<audio id="rule" preload>
-            <source src="Content_audio_rule.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_rule.mp3" type="audio/mp3">
+	</audio>
 	<audio id="category" preload>
-            <source src="Content_audio_category.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_category.mp3" type="audio/mp3">
+	</audio>
 	<audio id="spirits" preload>
-            <source src="Content_audio_spirits.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_spirits.mp3" type="audio/mp3">
+	</audio>
 	<audio id="1sips" preload>
-            <source src="Content_audio_1sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_1sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="2sips" preload>
-            <source src="Content_audio_2sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_2sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="3sips" preload>
-            <source src="Content_audio_3sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_3sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="4sips" preload>
-            <source src="Content_audio_4sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_4sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="5sips" preload>
-            <source src="Content_audio_5sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_5sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="6sips" preload>
-            <source src="Content_audio_6sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_6sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="7sips" preload>
-            <source src="Content_audio_7sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_7sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="8sips" preload>
-            <source src="Content_audio_8sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_8sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="9sips" preload>
-            <source src="Content_audio_9sip.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_9sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="10sips" preload>
-            <source src="Content_audio_10sip.mp3" type="audio/mp3">
-    </audio>
-
+		<source src="Content_audio_10sip.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_deadguy" preload>
-            <source src="Content_audio_deadguy.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_deadguy.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_deamo" preload>
-            <source src="Content_audio_deamo.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_deamo.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_geggin" preload>
-            <source src="Content_audio_geggin.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_geggin.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_grooven" preload>
-            <source src="Content_audio_grooven.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_grooven.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_jimmy" preload>
-            <source src="Content_audio_jimmy.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_jimmy.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_mrmedin" preload>
-            <source src="Content_audio_mrmedin.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_mrmedin.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_mrpub" preload>
-            <source src="Content_audio_mrpub.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_mrpub.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_randy" preload>
-            <source src="Content_audio_randy.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_randy.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_snuten" preload>
-            <source src="Content_audio_snuten.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_snuten.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_soulcollector" preload>
-            <source src="Content_audio_soulcollector.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_soulcollector.mp3" type="audio/mp3">
+	</audio>
 	<audio id="Content_audio_mejje" preload>
-            <source src="Content_audio_mejje.mp3" type="audio/mp3">
-    </audio>
+		<source src="Content_audio_mejje.mp3" type="audio/mp3">
+	</audio>
 </body>
 </html>
