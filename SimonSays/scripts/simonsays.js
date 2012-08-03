@@ -40,28 +40,28 @@ function SimonSays()
 				else if (isListening) {
 					console.log("Checking key!");
 
-					if (left)		//a
+					if (up)		//a
 					{
 						if (checkCurrentColor("green"))
 							greenPad();
 						else
 							gameOver();
 					}
-					else if (up)	//w
+					else if (right)	//w
 					{
 						if (checkCurrentColor("red"))
 							redPad();
 						else
 							gameOver();
 					}
-					else if (right)	//d
+					else if (down)	//d
 					{
 						if (checkCurrentColor("blue"))
 							bluePad();
 						else
 							gameOver();
 					}
-					else if (down)	//s
+					else if (left)	//s
 					{
 						if (checkCurrentColor("yellow"))
 							yellowPad();
