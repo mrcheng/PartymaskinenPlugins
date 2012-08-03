@@ -256,6 +256,6 @@ function SimonSays()
 		else if (score > 10)
 			$("#score-board").html('<h1>' + 'You got ' + (score) + ' points!' + '</h1><br /><p>Your a fucking MASTER!<br />Everybody (you too) must have a beer!</p>');
 
-		setTimeout('partyMachine.exit()', 1000);
+		setTimeout('partyMachine.exit()', 10000);
 	}
 }
