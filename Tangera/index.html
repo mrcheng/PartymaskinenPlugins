@@ -9,13 +9,15 @@
 	<link rel="stylesheet" href="Content_fonts_specimen_files_specimen_stylesheet.css" type="text/css" />
 	<link rel="stylesheet" href="Content_fonts_chicamonoregular_stylesheet.css" type="text/css" />
 	<link rel="stylesheet" href="Content_css_tangera.css">
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/json2.js" type="text/javascript"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/deps/jquery.ba-postmessage.js" type="text/javascript"></script>
-	<script src="http://mrcheng.github.com/Partymaskinen/partymachine.client.js" type="text/javascript"></script>
+	
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+
 	<script src="Content_fonts_specimen_files_easytabs.js" type="text/javascript"></script>
+	
 	<script type="text/javascript" src="Content_js_mersenne-twister.js"></script>
+	
 	<script src="Content_js_tangera.js"></script>
+	
 	<script type="text/javascript">
 
 		function fadeInInstr() {
@@ -47,18 +49,22 @@
 			setTimeout("tangera.getCard();", maxFadeOut + 2000);
 		}
 
-		$(function () {
-			$.receiveMessage(function (e) {
-				var data = JSON.parse(e.data);
+		function partyMachinePlugin(participants) {
 
-				if (data.event === 'startPlugin') {
-					tangera.init(data.participants);
-					fadeInInstr();
-					setTimeout("fadeOutInstr()", 10000);
-				}
+			$(function() {
+
+				createTangera();
+
+				tangera.init(participants);
+
+				fadeInInstr();
+
+				setTimeout("fadeOutInstr()", 10000);
+
 			});
-		});
- 
+
+		}
+
 	</script>
 </head>
 <body>
