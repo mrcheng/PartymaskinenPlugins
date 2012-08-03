@@ -44,29 +44,37 @@ function SimonSays()
 					{
 						if (checkCurrentColor("green"))
 							greenPad();
-						else
+						else {
 							gameOver();
+							return;
+						}
 					}
 					else if (right)	//w
 					{
 						if (checkCurrentColor("red"))
 							redPad();
-						else
+						else {
 							gameOver();
+							return;
+						}
 					}
 					else if (down)	//d
 					{
 						if (checkCurrentColor("blue"))
 							bluePad();
-						else
+						else {
 							gameOver();
+							return;
+						}
 					}
 					else if (left)	//s
 					{
 						if (checkCurrentColor("yellow"))
 							yellowPad();
-						else
+						else {
 							gameOver();
+							return;
+						}
 					}
 
 					if (currentColorIndex == currentColors.length) {
@@ -91,7 +99,7 @@ function SimonSays()
 
 		partyMachineParticipantControllerSelectors.assignParticipants(participants);
 	    	
-	}
+	};
 
 	// ---------------------------------------------
 
@@ -168,13 +176,13 @@ function SimonSays()
 		{
 			window.setTimeout("simonSays.loopColorsPause()", SPEED_MS);
 		}
-	}
+	};
 
 	this.loopColorsPause = function()
 	{
 		hidePads();
 		window.setTimeout("simonSays.loopColors()", 100);
-	}
+	};
 
 	function hidePads()
 	{
@@ -247,6 +255,7 @@ function SimonSays()
 			$("#score-board").html('<h1>' + 'You got ' + (score) + ' points!' + '</h1><br /><p>Awsome! You are the sensei of awsome brains!<br />Everybody (except you) have to drink 3 beers!</p>');
 		else if (score > 10)
 			$("#score-board").html('<h1>' + 'You got ' + (score) + ' points!' + '</h1><br /><p>Your a fucking MASTER!<br />Everybody (you too) must have a beer!</p>');
-		setTimeout('partyMachine.exit()', 10000);
+
+		setTimeout('partyMachine.exit()', 1000);
 	}
 }
