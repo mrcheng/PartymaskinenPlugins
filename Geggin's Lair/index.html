@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Geggin's Lair</title>
+
+	<object id="boomstickplugin" type="application/x-boomstickjavascriptjoysticksupport" width="0" height="0"></object>
+
+	<script type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
+
+	<style type="text/css">
+		html { background-color: black; color: white }
+		#container { width: 900px; margin-left: auto; margin-right: auto; position: relative }
+		#level { position: absolute; width: 100%; text-align: center; font-family: sans-serif; font-size: 48px }
+		#player { position: absolute; width: 32px; height: 32px; background-color: white }
+		#bed { position: absolute; top: 100px; width: 128px; height: 48px; background-color: blue }
+		#oven { position: absolute; top: 532px; width: 128px; height: 64px; background-color: yellow }
+		#door { position: absolute; top: 50px; left: 764px; width: 64px; height: 128px; background-color: brown }
+		#elevatorShaft { position: absolute; top: 50px; left: 832px; width: 48px; height: 600px; background-color: silver }
+		#elevator { position: absolute; top: 522px; left: 832px; width: 48px; height: 128px; background-color: gray }
+		#couch { position: absolute; top: 264px; left: 364px; width: 128px; height: 64px; background-color: green }
+	</style>
+
+	<script type="text/javascript">
+		var geggin;
+		var state;
+		var level;
+		var levelIndex;
+
+		function partyMachinePlugin(participants)
+		{
+			for (var i = 0; i < participants.length; i++)
+				participants[i].gameController.gamepadPressed = participant_gamepadPressed;
+
+			partyMachineParticipantControllerSelectors.assignParticipants(participants);
+
+			levelIndex = 0;
+			level = new Level(levelIndex);
+			state = new State();
+
+			geggin = new Geggin(document.getElementById('player'));
+			geggin.render();
+
+			gameLoop();
+		}
+
+		function gameLoop()
+		{
+			var spawn = level.getNextSpawn();
+			if (spawn)
+			{
+				if (spawn.door)
+					state.setVisitorInElevator(true);
+				if (spawn.oven)
+					state.setChickenInOven(true);
+				if (spawn.couch)
+					state.setCouchInTheWay(true);
+			}
+			else if (state.isEmpty())
+			{
+				level = new Level(++levelIndex);
+				document.getElementById('level').innerText = levelIndex + 1;
+			}
+
+			if (state.visitorAtDoor && geggin.inBed)
+				state.setVisitorAtDoor(false);
+
+			if (state.chickenIsDone && geggin.atOven)
+				state.setChickenIsDone(false);
+
+			if (state.chickenInOven)
+			{
+				state.setChickenProgress(state.chickenProgress + 0.1);
+				if (state.chickenProgress >= 1)
+				{
+					state.setChickenInOven(false);
+					state.setChickenProgress(0);
+					state.setChickenIsDone(true);
+				}
+			}
+
+			if (state.visitorInElevator)
+			{
+				state.setElevatorProgress(state.elevatorProgress + 0.2);
+				if (state.elevatorProgress >= 1)
+				{
+					state.setVisitorInElevator(false);
+					state.setElevatorProgress(0);
+					state.setVisitorAtDoor(true);
+				}
+			}
+
+			if (state.couchInTheWay)
+			{
+				state.setCouchProgress(state.couchProgress + 0.2);
+				if (state.couchProgress >= 1)
+				{
+					state.setCouchInTheWay(false);
+					state.setCouchProgress(0);
+					state.setAsleepInCouch(false);
+				}
+			}
+
+			setTimeout(gameLoop, 1000);
+		}
+
+		function participant_gamepadPressed(left, up, right, down)
+		{
+			if (state.asleepInCouch)
+				return;
+
+			if (right)
+				geggin.move(1, 0);
+			else if (left)
+				geggin.move(-1, 0);
+			else if (down)
+				geggin.move(0, 1);
+			else if (up)
+				geggin.move(0, -1);
+
+			if (state.couchInTheWay && geggin.atCouch)
+				state.setAsleepInCouch(true);
+
+			geggin.render();
+		}
+
+		function Level(index)
+		{
+			this.pattern = this.levelPatterns[index];
+			this.position = 0;
+
+			this.getNextSpawn = function()
+			{
+				if (this.position > this.pattern.length - 1)
+					return null;
+
+				var pos = this.pattern[this.position++];
+				var spawn =
+				{
+					door: pos.indexOf('d') > -1,
+					oven: pos.indexOf('o') > -1,
+					couch: pos.indexOf('c') > -1
+				}
+				return spawn;
+			};
+		}
+
+		Level.prototype.levelPatterns = [
+			['', '', 'd', '', '', 'o'],
+			['d', '', '', '', 'co']
+		];
+
+		function Geggin(dom)
+		{
+			this.inBed = false;
+			this.atOven = false;
+			this.atCouch = false;
+
+			this.positions = [
+				[{ x: 100, y: 100 },	{ x: 200, y: 100 },	{ x: 300, y: 100 },	{ x: 425, y: 100 },	{ x: 500, y: 100 },	{ x: 600, y: 100 },	{ x: 675, y: 100 }],
+				[					,					,					,	{ x: 400, y: 200 },					,					,	{ x: 700, y: 200 }],
+				[					,					,					,	{ x: 425, y: 300 },					,					,	{ x: 675, y: 300 }],
+				[					,					,					,	{ x: 400, y: 400 },					,					,	{ x: 700, y: 400 }],
+				[					,					,					,	{ x: 425, y: 500 },					,					,	{ x: 675, y: 500 }],
+				[{ x: 100, y: 600 },	{ x: 200, y: 600 },	{ x: 300, y: 600 },	{ x: 400, y: 600 },					,					,	{ x: 700, y: 600 }]
+			];
+
+			this.dom = dom;
+			this.position = { x: 3, y: 2 };
+
+			this.move = function(xMod, yMod)
+			{
+				var pos = { x: this.position.x + xMod, y: this.position.y + yMod };
+				if (this.positions[pos.y] && this.positions[pos.y][pos.x])
+				{
+					this.position = pos;
+
+					this.inBed = pos.x == 0 && pos.y == 0;
+					this.atOven = pos.x == 0 && pos.y == 5;
+					this.atCouch = pos.x == 3 && pos.y == 2;
+				}
+			};
+
+			this.render = function()
+			{
+				var pos = this.positions[this.position.y][this.position.x];
+				this.dom.style.left = pos.x + 'px';
+				this.dom.style.top = pos.y + 'px';
+			};
+		}
+
+		function State()
+		{
+			this.chickenInOven = false;
+			this.chickenProgress = 0;
+			this.chickenIsDone = false;
+			this.visitorInElevator = false;
+			this.elevatorProgress = 0;
+			this.visitorAtDoor = false;
+			this.couchInTheWay = false;
+			this.couchProgress = 0;
+			this.asleepInCouch = false;
+
+			this.isEmpty = function()
+			{
+				return !this.chickenInOven && !this.chickenIsDone &&
+					!this.visitorInElevator && !this.visitorAtDoor &&
+					!this.asleepInCouch;
+			};
+
+			this.setChickenInOven = function(value)
+			{
+				if (!this.chickenInOven && value)
+					document.getElementById('oven').style.backgroundColor = 'orange';
+				else if (this.chickenInOven && !value)
+					document.getElementById('oven').style.backgroundColor = '';
+				this.chickenInOven = value;
+			};
+
+			this.setChickenProgress = function(value)
+			{
+				if (this.chickenProgress != value)
+					document.getElementById('oven').innerText = Math.round(value * 100) + ' %';
+				this.chickenProgress = value;
+			};
+
+			this.setChickenIsDone = function(value)
+			{
+				if (!this.chickenIsDone && value)
+					document.getElementById('oven').style.backgroundColor = 'red';
+				else if (this.chickenIsDone && !value)
+					document.getElementById('oven').style.backgroundColor = '';
+				this.chickenIsDone = value;
+			};
+
+			this.setVisitorInElevator = function(value)
+			{
+				if (!this.visitorInElevator && value)
+					document.getElementById('elevator').style.backgroundColor = 'yellow';
+				else if (this.visitorInElevator && !value)
+					document.getElementById('elevator').style.backgroundColor = '';
+				this.visitorInElevator = value;
+			};
+
+			this.setElevatorProgress = function(value)
+			{
+				if (this.elevatorProgress != value)
+					document.getElementById('elevator').style.top = (50 + 472 - parseInt(472 * value)) + 'px';
+				this.elevatorProgress = value;
+			};
+
+			this.setVisitorAtDoor = function(value)
+			{
+				if (!this.visitorAtDoor && value)
+					document.getElementById('door').style.backgroundColor = 'red';
+				else if (this.visitorAtDoor && !value)
+					document.getElementById('door').style.backgroundColor = '';
+				this.visitorAtDoor = value;
+			};
+
+			this.setCouchInTheWay = function(value)
+			{
+				if (!this.couchInTheWay && value)
+					document.getElementById('couch').style.visibility = 'visible';
+				else if (this.couchInTheWay && !value)
+					document.getElementById('couch').style.visibility = 'hidden';
+				this.couchInTheWay = value;
+			};
+
+			this.setCouchProgress = function(value)
+			{
+				if (this.couchProgress != value)
+					document.getElementById('couch').innerText = Math.round(value * 100) + ' %';
+				this.couchProgress = value;
+			};
+
+			this.setAsleepInCouch = function(value)
+			{
+				this.asleepInCouch = value;
+			};
+		}
+	</script>
+</head>
+<body>
+	<div id="container">
+		<div id="level">1</div>
+		<div id="bed"></div>
+		<div id="oven"></div>
+		<div id="door"></div>
+		<div id="elevatorShaft"></div>
+		<div id="elevator"></div>
+		<div id="couch" style="visibility: hidden"></div>
+		<div id="player"></div>
+	</div>
+</body>
+</html>
