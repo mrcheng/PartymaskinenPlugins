@@ -8,6 +8,7 @@ function SimonSays()
 	var currentColorIndex = 0;
 
 	var isListening = true;
+	var isGameOver = false;
 
 	var SPEED_MS = 1000;
 	var NEXT_COLOR_PAUSE_MS = 1000;
@@ -26,7 +27,10 @@ function SimonSays()
 
 			cp.gameController.gamepadPressed = function (left, up, right, down) {
 				
-				if ($("#score-board").css("display") != "none") {
+				if(isGameOver) {
+					console.log("It is Game Over! Waiting for timeout to return to Partymaskinen!");					
+				}
+				else if ($("#score-board").css("display") != "none") {
 					console.log("Hiding Score-Board");
 					$("#score-board").hide();
 					isListening = false;
@@ -84,8 +88,7 @@ function SimonSays()
 				}
 				else {
 					console.log("Is NOT Listening!");
-				}
-				
+				}				
 			};
 
 			cp.gameController.gamepadReleased = function (left, up, right, down) {
@@ -230,6 +233,8 @@ function SimonSays()
 
 	function gameOver()
 	{
+		isGameOver = true;
+
 		$("#score-board").css("display","block");
 		if (score == 0)
 			$("#score-board").html('<h1>' + 'You got ' + (score) + ' points!' + '</h1><br /><p>Wtf???<br />Drink 5 beers!</p>');
