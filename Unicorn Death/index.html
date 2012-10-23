@@ -36,6 +36,8 @@
     function partyMachinePlugin(participants) {
     	this.participants = participants;
 
+    	ready();
+	    
     	setTimeout('init()', 2000);
     }
     
@@ -46,20 +48,20 @@
     	audio.play();
     }
 
-		function ready()
-		{
-			if (countdown == 0){
-			$("#txtCountdown").html("GO!");
-			}
-			else {
-			$("#txtCountdown").html(countdown);
-			}
-			countdown--;
-			if (countdown < 0)
-				setTimeout('init()', 1000);
-			else
-				setTimeout('ready()', 1000);
+	function ready()
+	{
+		if (countdown == 0){
+		$("#txtCountdown").html("GO!");
 		}
+		else {
+		$("#txtCountdown").html(countdown);
+		}
+		countdown--;
+		if (countdown < 0)
+			setTimeout('init()', 1000);
+		else
+			setTimeout('ready()', 1000);
+	}
 
 	var leftPressed, rightPressed;
 
@@ -183,7 +185,7 @@
 		}
 	</script>
 </head>
-<body onload="ready()">
+<body>
 	<audio src="skylander.mp3" autobuffer="" autoplay=""></audio>
 	<div id="unicorn">	
 		<img src="pegasus1.gif" width="520" height="444" alt="lizard" />
