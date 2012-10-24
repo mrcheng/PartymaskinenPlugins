@@ -17,13 +17,12 @@
 		#divGameOver .divLoser { display: inline-block }
 	</style>
 
-	<script type="text/javascript" src="PartyMachine.js"></script>
+	<script language="javascript" type="text/javascript" src="../partymachine.client.bootstrap.js"></script>
 	<script type="text/javascript" src="questions.js"></script>
 	<script type="text/javascript">
 		var participant1, participant2, participant3;
-		function onload()
-		{
-			var participants = partyMachine.getParticipants();
+
+		function partyMachinePlugin(participants) {
 			shuffle(participants);
 
 			participant1 = participants[0];
@@ -33,38 +32,43 @@
 			document.getElementById('imgParticipant1').src = participant1.ImageUrl;
 			document.getElementById('imgParticipant2').src = participant2.ImageUrl;
 			document.getElementById('imgParticipant3').src = participant3.ImageUrl;
-
-			partyMachine.gameControllersAssigned = function()
+			
+			participant1.gameController.gamepadPressed = function(left, up, right, down)
 			{
-				participant1.gameController.gamepadPressed = function(left, up, right, down)
-				{
-					participant_gamepadPressed(participant1, left, up, right, down);
-				};
-				participant2.gameController.gamepadPressed = function(left, up, right, down)
-				{
-					participant_gamepadPressed(participant2, left, up, right, down);
-				};
-				participant3.gameController.gamepadPressed = function(left, up, right, down)
-				{
-					participant_gamepadPressed(participant3, left, up, right, down);
-				};
+				participant_gamepadPressed(participant1, left, up, right, down);
+			};
+			
+			participant2.gameController.gamepadPressed = function(left, up, right, down)
+			{
+				participant_gamepadPressed(participant2, left, up, right, down);
+			};
+			
+			participant3.gameController.gamepadPressed = function(left, up, right, down)
+			{
+				participant_gamepadPressed(participant3, left, up, right, down);
+			};
 
-				participant1.gameController.buttonsPressed = function(a, b, c, d)
-				{
-					participant_buttonsPressed(participant1, a, b, c, d);
-				};
-				participant2.gameController.buttonsPressed = function(a, b, c, d)
-				{
-					participant_buttonsPressed(participant2, a, b, c, d);
-				};
-				participant3.gameController.buttonsPressed = function(a, b, c, d)
-				{
-					participant_buttonsPressed(participant3, a, b, c, d);
-				};
-
+			participant1.gameController.buttonsPressed = function(a, b, c, d)
+			{
+				participant_buttonsPressed(participant1, a, b, c, d);
+			};
+			
+			participant2.gameController.buttonsPressed = function(a, b, c, d)
+			{
+				participant_buttonsPressed(participant2, a, b, c, d);
+			};
+			
+			participant3.gameController.buttonsPressed = function(a, b, c, d)
+			{
+				participant_buttonsPressed(participant3, a, b, c, d);
+			};
+			
+			var gameControllersAssigned = function () {
 				ready();
 			};
-			partyMachine.assignGameControllers(participant1, participant2, participant3);
+
+			partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [participant1, participant2, participant3]);
+			
 		}
 
 		var countdown = 5;
@@ -322,7 +326,7 @@
 		}
 	</script>
 </head>
-<body onload="onload()">
+<body>
 	<div style="margin-left: auto; margin-right: auto; width: 1024px; height: 768px; position: relative; background-image: url('bg.png')">
 		<div id="divGameOver" style="display: none">
 			<div id="divWinner" style="margin-bottom: 30px">

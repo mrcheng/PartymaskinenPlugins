@@ -65,47 +65,47 @@
 //TODO: parseInt divisions
 
 		function partyMachinePlugin(participants) {
-			$(function () {
-				shuffle(participants);
+			
+			shuffle(participants);
 
-				leftParticipant = participants[0];
-				rightParticipant = participants[1];
+			leftParticipant = participants[0];
+			rightParticipant = participants[1];
 						
-				document.getElementById('imgLeftParticipant').src = leftParticipant.imageUrl;
-				document.getElementById('h1LeftParticipant').innerText = leftParticipant.name;
-				document.getElementById('imgRightParticipant').src = rightParticipant.imageUrl;
-				document.getElementById('h1RightParticipant').innerText = rightParticipant.name;
+			document.getElementById('imgLeftParticipant').src = leftParticipant.imageUrl;
+			document.getElementById('h1LeftParticipant').innerText = leftParticipant.name;
+			document.getElementById('imgRightParticipant').src = rightParticipant.imageUrl;
+			document.getElementById('h1RightParticipant').innerText = rightParticipant.name;
 
-				leftPaddle = document.getElementById('divLeftPaddle');
-				rightPaddle = document.getElementById('divRightPaddle');
-				ball = document.getElementById('divBall');
+			leftPaddle = document.getElementById('divLeftPaddle');
+			rightPaddle = document.getElementById('divRightPaddle');
+			ball = document.getElementById('divBall');
 
-				canvas = document.getElementById('canvas');
-				ctx = canvas.getContext('2d');
+			canvas = document.getElementById('canvas');
+			ctx = canvas.getContext('2d');
 
-				renderBoard();
+			renderBoard();
 
-				init();
+			init();
 
-				leftParticipant.gameController.joystick = function (x, y) {
-					leftJoystickPos = y;
-				};
+			leftParticipant.gameController.joystick = function (x, y) {
+				leftJoystickPos = y;
+			};
 
-				rightParticipant.gameController.joystick = function (x, y) {
-					rightJoystickPos = y;
-				};
+			rightParticipant.gameController.joystick = function (x, y) {
+				rightJoystickPos = y;
+			};
 					
-				var gameControllersAssigned = function () {
+			var gameControllersAssigned = function () {
 					
-					document.getElementById('divParticipants').style.display = '';
+				document.getElementById('divParticipants').style.display = '';
 					
-					gameLoop();
+				gameLoop();
 
-					setTimeout('ready()', 2000);
-				};
+				setTimeout('ready()', 2000);
+			};
 
-				partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [leftParticipant, rightParticipant]);
-			});
+			partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [leftParticipant, rightParticipant]);
+			
 		}
 
 		function renderBoard()
