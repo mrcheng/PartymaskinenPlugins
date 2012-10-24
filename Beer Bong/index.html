@@ -23,57 +23,52 @@
 	
 	<script type="text/javascript">
 
-		function partyMachinePlugin(contenders) {
-
-			$(function() {
-
-				if (!contenders || contenders.length <= 0) {
-					partyMachine.exit();
-				}
-
-				var m = new MersenneTwister();
-				
-				var firstContender = m.genrand_int31() % contenders.length;
-				var secondContender = m.genrand_int31() % contenders.length;
-
-				if (contenders.length > 1) {
-					while (firstContender === secondContender) {
-						secondContender = m.genrand_int31() % contenders.length;
-					}
-				}
-
-				var contenderHtml = '';
-
-				for (var c = 0; c < contenders.length; c++) {
-
-					var contender = contenders[c];
-					contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.imageUrl + '" width="128" height="128"/></span>';
-				}
-
-				$("#contenders").html(contenderHtml);
-
-				var dudesChosen = new Array();
-
-				while (dudesChosen.length != contenders.length - 2) {
-
-					var newlyChosen = m.genrand_int31() % contenders.length;
-
-					if (newlyChosen != firstContender
-						&& newlyChosen != secondContender
-							&& $.inArray(newlyChosen, dudesChosen) == -1) {
-						dudesChosen.push(newlyChosen);
-						$("#contender_" + newlyChosen).fadeTo(7000, 0.001, function() {
-							// Animation complete.
-						});
-					}
-
-				}
-
-				setTimeout('partyMachine.exit()', 21000);
-
-			});
+		function partyMachinePlugin(plugin) {
 			
-		}
+			if (!plugin.participants || plugin.participants.length <= 0) {
+				partyMachine.exit();
+			}
+
+			var m = new MersenneTwister();
+				
+			var firstContender = m.genrand_int31() % plugin.participants.length;
+			var secondContender = m.genrand_int31() % plugin.participants.length;
+
+			if (contenders.length > 1) {
+				while (firstContender === secondContender) {
+					secondContender = m.genrand_int31() % plugin.participants.length;
+				}
+			}
+
+			var contenderHtml = '';
+
+			for (var c = 0; c < plugin.participants.length; c++) {
+
+				var contender = plugin.participants[c];
+				contenderHtml += '<span class="contender" id="contender_' + c + '"><img src="' + contender.imageUrl + '" width="128" height="128"/></span>';
+			}
+
+			$("#contenders").html(contenderHtml);
+
+			var dudesChosen = new Array();
+
+			while (dudesChosen.length != plugin.participants.length - 2) {
+
+				var newlyChosen = m.genrand_int31() % plugin.participants.length;
+
+				if (newlyChosen != firstContender
+					&& newlyChosen != secondContender
+						&& $.inArray(newlyChosen, dudesChosen) == -1) {
+					dudesChosen.push(newlyChosen);
+					$("#contender_" + newlyChosen).fadeTo(7000, 0.001, function() {
+						// Animation complete.
+					});
+				}
+
+			}
+
+			setTimeout('partyMachine.exit()', 21000);
+	}
 
 	</script>
 	

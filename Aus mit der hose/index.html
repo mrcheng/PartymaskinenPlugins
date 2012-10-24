@@ -15,9 +15,9 @@
 
 		<script type="text/javascript">
 			var participants = [];
-			function partyMachinePlugin(participants) {
-				for (var i = 0; i < participants.length; i++)
-					this.participants.push({ Name: participants[i].name });
+			function partyMachinePlugin(plugin) {
+				for (var i = 0; i < plugin.participants.length; i++)
+					this.participants.push({ Name: plugin.participants[i].name });
 				$('#flashContent').flash({
 					swf: 'AusMitDerHose.swf',
 					width: 1024,

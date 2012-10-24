@@ -69,18 +69,8 @@ color: black;border: 1px inset black;}
 
 <script language="javascript">
 
-	function partyMachinePlugin(contenders) {
-
-		$(function() {
-
-			startTimer();
-
-			var tmr = (parseInt($("#shotDelay").val()) * parseInt($("#totalShots").val())) * 1000 + 5000;
-
-			setTimeout('partyMachine.exit()', tmr);
-
-		});
-		
+	function partyMachinePlugin() {
+		startTimer();
 	}
 
 </script>

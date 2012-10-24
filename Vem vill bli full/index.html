@@ -22,16 +22,16 @@
 	<script type="text/javascript">
 		var participant1, participant2, participant3;
 
-		function partyMachinePlugin(participants) {
-			shuffle(participants);
+		function partyMachinePlugin(plugin) {
+			shuffle(plugin.participants);
 
-			participant1 = participants[0];
-			participant2 = participants[1];
-			participant3 = participants[2];
+			participant1 = plugin.participants[0];
+			participant2 = plugin.participants[1];
+			participant3 = plugin.participants[2];
 
-			document.getElementById('imgParticipant1').src = participant1.ImageUrl;
-			document.getElementById('imgParticipant2').src = participant2.ImageUrl;
-			document.getElementById('imgParticipant3').src = participant3.ImageUrl;
+			document.getElementById('imgParticipant1').src = participant1.imageUrl;
+			document.getElementById('imgParticipant2').src = participant2.imageUrl;
+			document.getElementById('imgParticipant3').src = participant3.imageUrl;
 			
 			participant1.gameController.gamepadPressed = function(left, up, right, down)
 			{
@@ -161,12 +161,12 @@
 				losers.push(participant2);
 			if (participant3 != answeringParticipant)
 				losers.push(participant3);
-			document.getElementById('imgWinner').src = answeringParticipant.ImageUrl;
-			document.getElementById('h1Winner').innerText = answeringParticipant.Name;
-			document.getElementById('imgLoser1').src = losers[0].ImageUrl;
-			document.getElementById('h1Loser1').innerText = losers[0].Name;
-			document.getElementById('imgLoser2').src = losers[1].ImageUrl;
-			document.getElementById('h1Loser2').innerText = losers[1].Name;
+			document.getElementById('imgWinner').src = answeringParticipant.imageUrl;
+			document.getElementById('h1Winner').innerText = answeringParticipant.name;
+			document.getElementById('imgLoser1').src = losers[0].imageUrl;
+			document.getElementById('h1Loser1').innerText = losers[0].name;
+			document.getElementById('imgLoser2').src = losers[1].imageUrl;
+			document.getElementById('h1Loser2').innerText = losers[1].name;
 			document.getElementById('imgLoser3').style.display = 'none';
 
 			resetAnsweringParticipant();
@@ -195,12 +195,12 @@
 				gameOver = true;
 
 				document.getElementById('divWinner').style.display = 'none';
-				document.getElementById('imgLoser1').src = participant1.ImageUrl;
-				document.getElementById('h1Loser1').innerText = participant1.Name;
-				document.getElementById('imgLoser2').src = participant2.ImageUrl;
-				document.getElementById('h1Loser2').innerText = participant2.Name;
-				document.getElementById('imgLoser3').src = participant3.ImageUrl;
-				document.getElementById('h1Loser3').innerText = participant3.Name;
+				document.getElementById('imgLoser1').src = participant1.imageUrl;
+				document.getElementById('h1Loser1').innerText = participant1.name;
+				document.getElementById('imgLoser2').src = participant2.imageUrl;
+				document.getElementById('h1Loser2').innerText = participant2.name;
+				document.getElementById('imgLoser3').src = participant3.imageUrl;
+				document.getElementById('h1Loser3').innerText = participant3.name;
 
 				document.getElementById('divGameOver').style.display = '';
 

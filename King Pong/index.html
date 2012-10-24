@@ -64,12 +64,12 @@
 		
 //TODO: parseInt divisions
 
-		function partyMachinePlugin(participants) {
+		function partyMachinePlugin(plugin) {
 			
-			shuffle(participants);
+			shuffle(plugin.participants);
 
-			leftParticipant = participants[0];
-			rightParticipant = participants[1];
+			leftParticipant = plugin.participants[0];
+			rightParticipant = plugin.participants[1];
 						
 			document.getElementById('imgLeftParticipant').src = leftParticipant.imageUrl;
 			document.getElementById('h1LeftParticipant').innerText = leftParticipant.name;

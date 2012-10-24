@@ -51,7 +51,6 @@ function startTimer() {
 
 	shotsLeft = totalShots;
 	print();
-
 }
 
 function print() {
@@ -76,6 +75,10 @@ function print() {
 			var secTimer = seconds();
 		}
 
+	}
+	
+	if (shotsLeft <= 0) {
+		setTimeout('partyMachine.exit()', 500);
 	}
 }
 

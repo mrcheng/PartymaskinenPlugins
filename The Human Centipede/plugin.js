@@ -413,10 +413,3 @@ HumanCentipede.prototype = {
 };
 
 
-$(function() {
-	var plugin = new HumanCentipede();
-	$.receiveMessage(function (e) {
-		plugin.messageReceived(e);
-	});
-});
-

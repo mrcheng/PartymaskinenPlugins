@@ -21,7 +21,7 @@
 	
 	<script type="text/javascript">
 
-		function partyMachinePlugin(participants) {
+		function partyMachinePlugin(plugin) {
 
 
 			function fadeInInstr() {
@@ -54,7 +54,7 @@
 			}
 
 
-			tangera.init(participants);
+			tangera.init(plugin.participants);
 			fadeInInstr();
 			setTimeout("fadeOutInstr()", 10000);
 
@@ -328,19 +328,15 @@
 			setTimeout("tangera.getCard();", maxFadeOut + 2000);
 		}
 
-		function partyMachinePlugin(participants) {
+		function partyMachinePlugin(plugin) {
 
-			$(function() {
+			createTangera();
 
-				createTangera();
+			tangera.init(plugin.participants);
 
-				tangera.init(participants);
+			fadeInInstr();
 
-				fadeInInstr();
-
-				setTimeout("fadeOutInstr()", 10000);
-
-			});
+			setTimeout("fadeOutInstr()", 10000);
 
 		}
 

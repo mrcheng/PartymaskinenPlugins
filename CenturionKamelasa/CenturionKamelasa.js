@@ -55,11 +55,10 @@ var CenturionKamelasa = function(ctx, width, height)
 			_drawBackground(0, 200, _width, _height);	 	
 	
 			var background = new Image();
-			
-			background.onload = function () 
-			{
-				_ctx.drawImage(background, 0, 280);    
-			}
+
+			background.onload = function () {
+				_ctx.drawImage(background, 0, 280);
+			};
 	
 			background.src = "jockeTwo.png";			
 			
@@ -151,9 +150,9 @@ var CenturionKamelasa = function(ctx, width, height)
 	};
 	
 	_init();
-	
+
 	return {
 		draw: _draw,
 		drawScroller: _drawScroller
-	}
+	};
 }

@@ -33,8 +33,8 @@
     var countdown = 5;
     var participants = [];
 
-    function partyMachinePlugin(participants) {
-    	this.participants = participants;
+    function partyMachinePlugin(plugin) {
+    	this.participants = plugin.participants;
 
     	ready();
 	    

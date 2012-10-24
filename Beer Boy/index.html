@@ -28,9 +28,9 @@
 			return { x: pos.x * 16, y: pos.y * 16 };
 		}
 
-		function partyMachinePlugin(participants)
+		function partyMachinePlugin(plugin)
 		{
-			this.participants = participants;
+			this.participants = plugin.participants;
 
 			setTimeout('init()', 2000);
 		}

@@ -26,14 +26,12 @@
 
 		function partyMachinePlugin() {
 		
-			$(document).ready(function() {
-				var ctx = $('#canvas')[0].getContext("2d");
+			var ctx = $('#canvas')[0].getContext("2d");
 
-				var ck = new CenturionKamelasa(ctx, 800, 600);
+			var ck = new CenturionKamelasa(ctx, 800, 600);
 
-				setInterval(ck.draw, 1000);
-				setInterval(ck.drawScroller, 30);
-			});
+			setInterval(ck.draw, 1000);
+			setInterval(ck.drawScroller, 30);
 
 		}
 		

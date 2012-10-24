@@ -14,21 +14,15 @@
 
 	<script type="text/javascript">
 		// Loader will call this method when it's done loading.
-		function partyMachinePlugin(participants) {
-
-			// Plugin loader is done
+		function partyMachinePlugin(plugin) {
 			
-			console.log("plugin.partyMachinePlugin()");
+			console.log("plugin.ready()");
+				
+			console.log(plugin.participants);
+				
+			console.log(plugin.currentParticipant);
 
-			$(function () {
-				
-				console.log("plugin.ready()");
-				
-				console.log(participants);
-
-				// Most plugin code should go here!
-				
-			});
+			// Most plugin code should go here!
 		}
 	</script>
 	

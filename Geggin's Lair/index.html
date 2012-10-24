@@ -26,12 +26,12 @@
 		var level;
 		var levelIndex;
 
-		function partyMachinePlugin(participants)
+		function partyMachinePlugin(plugin)
 		{
-			for (var i = 0; i < participants.length; i++)
-				participants[i].gameController.gamepadPressed = participant_gamepadPressed;
+			for (var i = 0; i < plugin.participants.length; i++)
+				plugin.participants[i].gameController.gamepadPressed = participant_gamepadPressed;
 
-			partyMachineParticipantControllerSelectors.assignParticipants(participants);
+			partyMachineParticipantControllerSelectors.assignParticipants(plugin.participants);
 
 			levelIndex = 0;
 			level = new Level(levelIndex);

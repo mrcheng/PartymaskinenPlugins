@@ -30,10 +30,8 @@
 
 	var simonSays = new SimonSays();
 
-	function partyMachinePlugin(participants) {
-		$(function() {
-			simonSays.gameStart(participants);
-		});
+	function partyMachinePlugin(plugin) {
+		simonSays.gameStart(plugin.participants);
 	}
 	
 
