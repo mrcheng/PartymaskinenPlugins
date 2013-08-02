@@ -155,7 +155,7 @@ function setupGame(plugin) {
 
 
 function showCurrentGame() {
-    
+        
     playSound("Pingu_Opening_Theme.mp3");
 
     var counter = 11;
