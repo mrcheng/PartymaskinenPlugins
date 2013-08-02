@@ -283,13 +283,13 @@ function participantGamepadPressed(participant, left, up, right, down) {
     var p1 = document.getElementById("player1");
     var p2 = document.getElementById("player2");
 
-    if (left) {
+    if (left || up) {
 
         p1.classList.add("selected");
         p2.classList.remove("selected");
         this.hasSelectedWinner = true;
 
-    } else {
+    } else if (right || down) {
 
         p2.classList.add("selected");
         p1.classList.remove("selected");
