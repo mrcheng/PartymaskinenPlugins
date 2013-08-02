@@ -1,0 +1,24 @@
+body {
+    margin: 0 auto;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+	overflow: hidden;
+	font-family: 'Acme', sans-serif;
+}
+
+h1 {font-family: 'Nosifer', cursive;font-size:60px;margin-top: 20px;}
+h2 {font-size: 40px;margin-top: -20px;}
+p {font-size:30px;}
+
+
+.selection {float: left;}
+.selection img {width: 580px;margin-right: 20px;}
+
+.selectioncontainer {margin-left:2%;}
+marquee p {margin-top: -10px;}
+
+#selected{border: 10px solid red;}
+#not-selected{border: 10px solid white;}
+
+
