@@ -16,6 +16,8 @@
 
         function partyMachinePlugin(plugin)
         {
+            playSound('SF.mp3');
+
             $alts = $('#selectioncontainer .selection');
 
             db = JSON.parse(localStorage.getItem('Voter3000'));
@@ -149,6 +151,13 @@
 				arr[j] = tempi;
 			}
 		}
+
+	    function playSound(path)
+        {
+		    var audio = document.createElement('AUDIO');
+		    audio.src = path;
+		    audio.play();
+	    }
     </script>
 </head>
 
