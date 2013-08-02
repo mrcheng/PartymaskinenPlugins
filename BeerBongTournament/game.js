@@ -2,6 +2,7 @@ var game = {};
 var storageKey = "BeerPongTournament";
 var gameReady = false;
 var alreadyVoted = false;
+var hasSelectedWinner = false;
 
 function partyMachinePlugin(plugin) {
 
@@ -253,7 +254,7 @@ function getParticipant(participants, name) {
 
 function participantButtonsPressed(participant, a, b, c, d) {
         
-    if (this.gameReady && !this.alreadyVoted && (a || b || c || d)) {
+    if (this.gameReady && this.hasSelectedWinner && !this.alreadyVoted && (a || b || c || d)) {
 
         this.alreadyVoted = true;
         
@@ -286,11 +287,13 @@ function participantGamepadPressed(participant, left, up, right, down) {
 
         p1.classList.add("selected");
         p2.classList.remove("selected");
+        this.hasSelectedWinner = true;
 
     } else {
 
         p2.classList.add("selected");
         p1.classList.remove("selected");
+        this.hasSelectedWinner = true;
 
     }
 
