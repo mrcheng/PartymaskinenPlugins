@@ -219,8 +219,7 @@ function waitForWinner(plugin) {
         
     };
 
-    //partyMachineParticipantControllerSelectors.assignParticipants([participant], gameControllersAssigned);
-    partyMachineParticipantControllerSelectors.assignGameControllers(gameControllersAssigned, [participant]);
+    partyMachineParticipantControllerSelectors.assignParticipants([participant], gameControllersAssigned);
 
     window.addEventListener("keydown", function (e) {
 
