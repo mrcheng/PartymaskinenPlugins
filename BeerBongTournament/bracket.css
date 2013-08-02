@@ -1,49 +1,127 @@
 body {
-    font-size: 24px;
-    margin: 0 auto;
-    width: 800px;
+    position: relative;
+    font-size: 30px;
+    padding: 20px;
     background-color: #d5a103;
-    text-align: center;
+    font-family: 'Comic Sans MS', sans-serif;
+    overflow: hidden;
+    text-shadow: 1px 1px 0 #000;
+    color: #333;
+}
+
+.logo {
+    position: absolute;
+    left: 50%;
+    margin-left: -256px;
 }
 
 h1 {
     color: white;
-    text-shadow: 1px 1px 0 #000;
 }
 
 h2 {
     font-size: 40px;
+    display: inline-block;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+#currentgame h2:first-child {
+    margin-left: 0;
 }
 
 h3 {
     color: pink;
 }
 
+.selected {
+    border-radius: 10px;
+    background-color: #000;
+    color: #fff;
+}
+
+.player {
+    color: #fff;
+}
+
+.key {
+    color: #f00;
+}
+
+#currentgame {
+    width: 1200px;
+    position: absolute;
+    left: 50%;
+    margin-left: -600px;
+    text-align: center;
+    margin-top: 140px;
+
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
+}
+
 
 #counter {
     position: absolute;
-    top: 50%;
+    top: 200px;
     left: 50%;
-    margin-left: -200px;
-    margin-top: -100px;
-    width: 400px;
+    margin-left: -100px;
+    width: 200px;
     height: 200px;
     font-size: 60px;
     background-color: #fff;
     border: 4px solid #000;
     text-align: center;
     line-height: 200px;
+    border-radius: 50%;
+    padding: 30px;
 }
+
+#badge {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    z-index: 10;
+    background-color: #f00;
+    padding: 20px;
+    border: 15px solid #fff;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    color: #fff;
+    -webkit-transform:  rotate(-20deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+
+
+
+
+
+
+
+
+
 
 
 .tournament4-wrap, .tournament8-wrap, .tournament16-wrap, .tournament32-wrap {
 	text-align: center;
+    margin-top: 140px;
+    position: absolute;
+    left: 50%;
+    margin-left: -600px;
+
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
 }
 
 /****** round 1 ******/
 .round1-top, .round1-bottom {
 	float: left;
-	width: 150px;
+	width: 300px;
 	height: 2em;
 }
 
@@ -52,13 +130,13 @@ h3 {
 }
 
 .round2-topwrap .round1-bottom {
-	width: 149px;
+	width: 299px;
 	border-top: 1px solid #000;
 	border-right: 1px solid #000;
 }
 
 .round2-bottomwrap .round1-top {
-	width: 149px;
+	width: 299px;
 	border-bottom: 1px solid #000;
 	border-right: 1px solid #000;
 }
@@ -67,7 +145,7 @@ h3 {
 
 .round2-top, .round2-bottom {
 	float: right;
-	width: 150px;
+	width: 300px;
 	height: 4em;
 }
 
@@ -77,13 +155,13 @@ h3 {
 
 
 .round3-topwrap .round2-bottom {
-	width: 149px;
+	width: 299px;
 	border-top: 1px solid #000;
 	border-right: 1px solid #000;
 }
 
 .round3-bottomwrap .round2-top {
-	width: 149px;
+	width: 299px;
 	border-bottom: 1px solid #000;
 	border-right: 1px solid #000;
 }
@@ -94,7 +172,7 @@ h3 {
 
 .round2-topwrap, .round2-bottomwrap {
 	float: left;
-	width: 300px;
+	width: 600px;
 	height: 4em;
 }
 
@@ -102,7 +180,7 @@ h3 {
 
 .round3-top, .round3-bottom {
 	float: right;
-	width: 150px;
+	width: 300px;
 	height: 8em;
 }
 
@@ -128,7 +206,7 @@ h3 {
 
 .round3-topwrap, .round3-bottomwrap, .tournament4-wrap {
 	float: left;
-	width: 450px;
+	width: 900px;
 	height: 8em;
 }
 
@@ -136,7 +214,7 @@ h3 {
 
 .round4-top, .round4-bottom {
 	float: right;
-	width: 150px;
+	width: 300px;
 	height: 16em;
 }
 
@@ -159,7 +237,7 @@ h3 {
 
 .round4-topwrap, .round4-bottomwrap, .tournament8-wrap {
 	float: left;
-	width: 600px;
+	width: 1200px;
 }
 
 .tournament16-wrap .round4-top {

@@ -7,334 +7,51 @@
     <script src="../partymachine.client.bootstrap.js"></script>
     <script src="random.js"></script>
     <script src="player.js"></script>
-    <script>
-        var game = {};
-        var storageKey = "BeerPongTournament";
-
-        function partyMachinePlugin(plugin) {
-
-            setupGame(plugin);
-
-            waitForWinner();
-
-            clear();
-
-        }
-
-        function setupGame(plugin) {
-
-            this.game = JSON.parse(localStorage.getItem(this.storageKey));
-
-            if (this.game === null) {
-
-                this.game = {};
-
-                this.game.players = plugin.participants.random(8).map(function (el, index) {
-                    return new Player(el.name, (index + 1));
-                });
-           
-                this.game.semi = [];
-                this.game.final = [];
-                this.game.winner = null;
-                this.game.current = {
-                    top: getPlayer(1),
-                    bot: getPlayer(8),
-                    round: 1
-                };          
-
-            }
-
-            this.game.players.forEach(function (player) {
-
-                var dom = document.getElementById("s" + player.seed);
-
-                dom.innerHTML = player.name;
-
-                if (player.loser) {
-
-                    dom.style.textDecoration = "line-through";
-
-                }
-
-            });
-
-            this.game.semi.forEach(function (player) {
-
-                var id;
-
-                switch (player.seed) {
-                    case 1:
-                    case 8:
-                        id = "w1";
-                        break;
-                    case 4:
-                    case 5:
-                        id = "w2";
-                        break;
-                    case 2:
-                    case 7:
-                        id = "w3";
-                        break;
-                    case 3:
-                    case 6:
-                        id = "w4";
-                        break;
-                }
-
-                var dom = document.getElementById(id);
-
-                dom.innerHTML = player.name;
-
-                if (player.loser) {
-
-                    dom.style.textDecoration = "line-through";
-
-                }
-
-            });
-
-            this.game.final.forEach(function (player) {
-
-                var id;
-
-                switch (player.seed) {
-                    case 1:
-                    case 8:
-                    case 4:
-                    case 5:
-                        id = "f1";
-                        break;
-                    case 2:
-                    case 7:
-                    case 3:
-                    case 6:
-                        id = "f2";
-                        break;
-                }
-
-                var dom = document.getElementById(id);
-
-                dom.innerHTML = player.name;
-
-                if (player.loser) {
-
-                    dom.style.textDecoration = "line-through";
-
-                }
-
-            });
-
-            if (this.game.winner !== null) {
-
-                document.getElementById("winner").innerHTML = this.game.winner.name;
-                document.getElementById("winner_player").innerHTML = this.game.winner.name;
-                document.getElementById("winnertext").style.display = "block";
-                document.getElementById("currentgame").style.display = "none";
-
-            }
-
-            document.getElementById("player1").innerHTML = this.game.current.top.name;
-            document.getElementById("player2").innerHTML = this.game.current.bot.name;
-
-        }
-
-        function getPlayer(seed) {
-            return this.game.players.filter(function (player) {
-                return player.seed === seed;
-            })[0];
-        }
-
-        function setLoser(player, level) {
-
-            if (level === 1) {
-                this.game.players.forEach(function (p) {
-                    if (p.seed === player.seed) {
-                        p.loser = true;
-                    }
-                });
-            }
-            else if (level === 2) {
-                this.game.semi.forEach(function (p) {
-                    if (p.seed === player.seed) {
-                        p.loser = true;
-                    }
-                });
-            }
-            else if (level === 3) {
-                this.game.final.forEach(function (p) {
-                    if (p.seed === player.seed) {
-                        p.loser = true;
-                    }
-                });
-            }
-
-        }
-
-        function waitForWinner() {
-
-            window.addEventListener("keydown", function (e) {
-                
-                if (e.keyCode === 88) { // X
-
-                    updatePlayers(this.game.current.top, this.game.current.bot);
-
-                    saveGameAndExit();
-
-                } else if (e.keyCode === 89) { // Y
-                    
-                    updatePlayers(this.game.current.bot, this.game.current.top);
-
-                    saveGameAndExit();
-
-                }
-
-            }, true);
-
-        }
-
-        function updatePlayers(winner, loser) {
-
-            if (this.game.current.round === 1) {
-
-                this.game.semi.push(winner);
-
-                setLoser(loser, 1);
-
-                switch (winner.seed) {
-                    case 1:
-                    case 8:
-                        this.game.current.top = getPlayer(4);
-                        this.game.current.bot = getPlayer(5);
-                        break;
-                    case 4:
-                    case 5:
-                        this.game.current.top = getPlayer(2);
-                        this.game.current.bot = getPlayer(7);
-                        break;
-                    case 2:
-                    case 7:
-                        this.game.current.top = getPlayer(3);
-                        this.game.current.bot = getPlayer(6);
-                        break;
-                    case 3:
-                    case 6:
-                        this.game.current.top = this.game.semi[0];
-                        this.game.current.bot = this.game.semi[1];
-                        this.game.current.round = 2;
-                }
-
-            } else if (this.game.current.round === 2) {
-
-                this.game.final.push(winner);
-
-                setLoser(loser, 2);
-
-                if (winner.name === this.game.semi[0].name || winner.name === this.game.semi[1].name) {
-
-                    this.game.current.top = this.game.semi[2];
-                    this.game.current.bot = this.game.semi[3];
-
-                } else {
-
-                    this.game.current.top = this.game.final[0];
-                    this.game.current.bot = this.game.final[1];
-                    this.game.current.round = 3;
-                }
-
-            } else {
-
-                setLoser(loser, 3);
-
-                this.game.winner = winner;
-
-            }
-
-        }
-
-        function saveGameAndExit() {
-
-            localStorage.setItem(this.storageKey, JSON.stringify(this.game));
-
-            var counter = 5;
-            var dom = document.getElementById("counter");
-            dom.style.display = "block";
-            var int = setInterval(function () {
-                dom.innerHTML = counter;
-                counter = counter - 1;
-
-                if (counter === -1) {
-                    clearInterval(int);
-                    setTimeout("partyMachine.exit()", 1000);
-                }
-
-            }, 1000);
-
-        }
-
-        function clear() {
-
-            window.addEventListener("keydown", function (e) {
-
-                if (e.keyCode === 76) { // L
-
-                    localStorage.clear();
-
-                    window.location.reload();
-
-                } 
-
-            }, true);
-
-        }
-
-    </script>
+    <script src="game.js"></script>
 </head>
 
 <body>
-	<marquee><h3>Logo created 2012 by Jonas Wikstroem</h3></marquee>
-	<img src="Content/Logo.png" width="512" height="120" alt="logo" />
+	<img class="logo" src="Content/Logo.png" width="512" height="120" alt="logo" />
 
     <div id="currentgame">
-        <h1>BESTÄM VINNARE!</h1>
-        <h2><span id="player1"></span> <span>(tryck X!)</span></h2>
-        VS
-        <h2><span id="player2"></span> <span>(tryck Y!)</span></h2>
+        <h1>VEM VANN?!</h1>
+        <h2 id="player1" class="selected"></h2>
+        <h2>VS</h2>
+        <h2 id="player2"></h2>
     </div>
-
-    <div id="winnertext" style="display:none;">
-        VINNAREN ÄR <span id="winner_player"></span>!!!
-    </div>
+    
+    <div id="badge">VINNARE!</div>
 
     <div id="counter" style="display:none;"></div>
 
-    <div class="tournament8-wrap">
-		<div class="round4-top winner4" id="winner">Winner</div>
+    <div class="tournament8-wrap" id="tournament">
+		<div class="round4-top winner4" id="winner">Vinnare</div>
 
 		<div class="round3-topwrap">
-			<div class="round3-top" id="f1">Top finalist</div>
+			<div class="round3-top" id="f1">Finalist 1</div>
 			<div class="round2-topwrap">
-				<div class="round2-top" id="w1">1-8 winner</div>
-				<div class="round1-top" id="s1">#1 seed</div>
-				<div class="round1-bottom" id="s8">#8 seed</div>
+				<div class="round2-top" id="w1">1-8 vinnare</div>
+				<div class="round1-top" id="s1">#1 säd</div>
+				<div class="round1-bottom" id="s8">#8 säd</div>
 			</div>
 			<div class="round2-bottomwrap">
-				<div class="round2-bottom" id="w2">4-5 winner</div>
-				<div class="round1-top" id="s4">#4 seed</div>
-				<div class="round1-bottom" id="s5">#5 seed</div>
+				<div class="round2-bottom" id="w2">4-5 vinnare</div>
+				<div class="round1-top" id="s4">#4 säd</div>
+				<div class="round1-bottom" id="s5">#5 säd</div>
 			</div>
 		</div>
 
 		<div class="round3-bottomwrap">
-			<div class="round3-bottom" id="f2">Bottom finalist</div>
+			<div class="round3-bottom" id="f2">Finalist 2</div>
 			<div class="round2-topwrap">
-				<div class="round2-top" id="w3">2-7 winner</div>
-				<div class="round1-top" id="s2">#2 seed</div>
-				<div class="round1-bottom" id="s7">#7 seed</div>
+				<div class="round2-top" id="w3">2-7 vinnare</div>
+				<div class="round1-top" id="s2">#2 säd</div>
+				<div class="round1-bottom" id="s7">#7 säd</div>
 			</div>
 			<div class="round2-bottomwrap">
-				<div class="round2-bottom" id="w4">3-6 winner</div>
-				<div class="round1-top" id="s3">#3 seed</div>
-				<div class="round1-bottom" id="s6">#6 seed</div>
+				<div class="round2-bottom" id="w4">3-6 vinnare</div>
+				<div class="round1-top" id="s3">#3 säd</div>
+				<div class="round1-bottom" id="s6">#6 säd</div>
 			</div>
 		</div>
 	</div>
