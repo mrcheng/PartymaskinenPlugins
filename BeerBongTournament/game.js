@@ -283,19 +283,15 @@ function participantGamepadPressed(participant, left, up, right, down) {
     var p1 = document.getElementById("player1");
     var p2 = document.getElementById("player2");
 
-    if (down || up || left || right) {
+    if (left) {
 
-        if (p1.classList.contains("selected")) {
+        p1.classList.add("selected");
+        p2.classList.remove("selected");
 
-            p1.classList.remove("selected");
-            p2.classList.add("selected");
+    } else {
 
-        } else {
-            
-            p2.classList.remove("selected");
-            p1.classList.add("selected");
-
-        }
+        p2.classList.add("selected");
+        p1.classList.remove("selected");
 
     }
 
