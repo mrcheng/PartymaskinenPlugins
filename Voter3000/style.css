@@ -13,12 +13,8 @@ p {font-size:30px;}
 
 
 .selection {float: left;}
-.selection img {width: 580px;margin-right: 20px;}
+.selection img {width: 580px;margin-right: 20px;border: 10px solid white;}
+.selection img.selected{border: 10px solid red;}
 
-.selectioncontainer {margin-left:2%;}
+#selectioncontainer {margin-left:2%;}
 marquee p {margin-top: -10px;}
-
-#selected{border: 10px solid red;}
-#not-selected{border: 10px solid white;}
-
-
