@@ -7,6 +7,8 @@ var hasSelectedWinner = false;
 function partyMachinePlugin(plugin) {
 
     setupGame(plugin);
+    
+    showCurrentGame();
 
     waitForWinner(plugin);
 
@@ -149,8 +151,6 @@ function setupGame(plugin) {
     document.getElementById("player1").innerHTML = this.game.current.top.name;
     document.getElementById("player2").innerHTML = this.game.current.bot.name;
 
-    showCurrentGame();
-
 }
 
 
@@ -183,17 +183,25 @@ function showCurrentGame() {
 }
 
 function getPlayer(seed) {
+    
     return this.game.players.filter(function (player) {
+        
         return player.seed === seed;
+        
     })[0];
+    
 }
 
 function setLoser(player, playerList) {
 
     playerList.forEach(function (p) {
+        
         if (p.seed === player.seed) {
+            
             p.loser = true;
+            
         }
+        
     });
 
 }
@@ -362,7 +370,7 @@ function saveGameAndExit() {
 
     localStorage.setItem(this.storageKey, JSON.stringify(this.game));
 
-    var timeout = 1000;
+    var timeout = 300;
 
     if (this.game.winner != null) {
         
