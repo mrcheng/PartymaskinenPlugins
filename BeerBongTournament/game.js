@@ -383,7 +383,7 @@ function saveGameAndExit() {
         dom.innerHTML = this.game.winner.name;
         timeout = 10000;
 
-        localStorage.clear();
+        localStorage.removeItem(this.storageKey);
 
     }
 
@@ -405,7 +405,7 @@ function clear() {
 
         if (e.keyCode === 76) { // L
 
-            localStorage.clear();
+            localStorage.removeItem(this.storageKey);
 
             window.location.reload();
 
