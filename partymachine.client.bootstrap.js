@@ -23,7 +23,7 @@
 	var loaderUrl = decodeURIComponent(encodedLoaderUrl);
 
 	if (typeof encodedLoaderUrl === "undefined") {
-		var baseUrl = 'http://localhost:1621/Partymaskinen/';
+	    var baseUrl = 'http://mrcheng.github.com/Partymaskinen/';
 		var defaultUrl = baseUrl + 'partymachine.client.loader.js';
 		console.log("Missing url to loader in querystring, defaulting to " + defaultUrl);
 		loaderUrl = defaultUrl;
